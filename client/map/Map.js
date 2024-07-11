@@ -51,7 +51,6 @@ mapContainer.on("pointerdown", (event) => {
 
 mapContainer.on("pointermove", (event) => {
   if (isMapDragging && isPanning) {
-    console.log(isDragging);
     const deltaX = event.data.global.x - lastMapX;
     const deltaY = event.data.global.y - lastMapY;
     mapContainer.x += deltaX;
@@ -97,14 +96,16 @@ function createSprite(texture, x, y) {
     if (isDragging) {
       const deltaSX = event.data.global.x - lastX;
       const deltaSY = event.data.global.y - lastY;
-      sprite.x += deltaSX;
-      sprite.y += deltaSY;
+      sprite.x = sprite.x + deltaSX;
+      sprite.y = sprite.y + deltaSY;
       lastX = event.data.global.x;
       lastY = event.data.global.y;
     }
   });
 
   sprite.on("pointerup", () => {
+    sprite.x = 64 * Math.round(sprite.x / 64);
+    sprite.y = 64 * Math.round(sprite.y / 64);
     isDragging = false;
     dragData = null;
   });
@@ -156,12 +157,16 @@ function setup(loader, resources) {
     const cameraY = -mapContainer.y;
 
     const gridX = Math.floor(cameraX / tileSize);
-    console.log(cameraX, tileSize);
     const gridY = Math.floor(cameraY / tileSize);
 
     tiles.forEach((tile) => {
       let tileX = tile.position.x;
       let tileY = tile.position.y;
+      if (tileX < cameraX + 500) {
+        mapContainer.removeChild(tile);
+        // const index = tiles.indexOf(tile);
+        // const x = tiles.splice(index, 1);
+      }
     });
 
     for (
@@ -181,6 +186,7 @@ function setup(loader, resources) {
             tile.position.y === row * tileSize
           ) {
             tileExists = true;
+            // tile.visible = true;
             break;
           }
         }
