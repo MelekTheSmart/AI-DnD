@@ -10,12 +10,10 @@ document.getElementById("game-container").appendChild(app.view);
 const mapContainer = new PIXI.Container();
 app.stage.addChild(mapContainer);
 
-// Load your map texture (replace 'your-map.png' with your actual map image)
 const texture = PIXI.Texture.from("GridPNG.png");
 const gridContainer = new PIXI.Container();
 mapContainer.addChild(gridContainer);
 
-// Enable interactivity and button mode for the mapContainer (to receive mouse events for panning)
 mapContainer.interactive = true;
 mapContainer.buttonMode = true;
 mapContainer.sortableChildren = true;
@@ -71,7 +69,6 @@ mapContainer.on("pointerupoutside", () => {
   isMapDragging = false;
 });
 let counter = 0;
-// Function to create draggable sprites
 function createSprite(texture, x, y) {
   const sprite = new PIXI.Sprite(texture);
   sprite.position.set(x, y);
@@ -125,8 +122,7 @@ function createSprite(texture, x, y) {
   return sprite;
 }
 
-// Example: Create multiple draggable sprites
-const spriteTexture = PIXI.Texture.from("sample.png"); // Replace with your sprite's image
+const spriteTexture = PIXI.Texture.from("sample.png");
 
 createSprite(spriteTexture, 200, 200);
 createSprite(spriteTexture, 300, 300);
@@ -138,7 +134,7 @@ loader.add("tile", "GridONE.png");
 loader.load(setup);
 
 function setup(loader, resources) {
-  const tileSize = 64; // Adjust as needed
+  const tileSize = 64;
   const viewportWidth = app.screen.width;
   const viewportHeight = app.screen.height;
 
