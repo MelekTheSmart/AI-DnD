@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 const openai = new OpenAI({
-  apiKey: "sk-proj-y2nIbC6zEbNjLLOihKpFT3BlbkFJ9YM40oH3bzHprbyMNbT0",
+  apiKey: "key",
 });
 
 function helloWorld(appendString) {
