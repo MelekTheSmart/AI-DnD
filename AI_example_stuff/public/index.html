@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue BoilerPlate with Function Calling</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <h1>{{ title }}</h1>
+      <div>
+        <input
+          v-model="userInput"
+          @keyup.enter="sendRequest"
+          placeholder="Enter your request"
+        />
+        <button @click="sendRequest">Send</button>
+      </div>
+      <div v-if="response">
+        <h2>Response:</h2>
+        <pre>{{ response }}</pre>
+      </div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

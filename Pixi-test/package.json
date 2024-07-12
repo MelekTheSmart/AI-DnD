@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "express": "^4.19.2",
+    "http-server": "^14.1.1",
+    "node": "^18.20.4",
+    "pixi.js": "^8.2.2"
+  }
+}

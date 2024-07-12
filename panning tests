@@ -24,7 +24,7 @@ import {
   worldContainer.eventMode = "static";
   worldContainer.cursor = "pointer";
 
-  worldContainer.on("mousedown", onDragStart, worldContainer);
+  // worldContainer.on("mousedown", onDragStart, worldContainer);
 
   // Set the texture's scale mode to nearest to preserve pixelation
   texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
@@ -53,7 +53,7 @@ import {
     bunny.scale.set(3);
 
     // Setup events for mouse + touch using the pointer events
-    // bunny.on('pointerdown', onDragStart, bunny);
+    bunny.on('pointerdown', onDragStart, bunny);
 
     // Move the sprite to its designated position
     bunny.x = x;
@@ -73,7 +73,9 @@ import {
 
   function onDragMove(event) {
     if (dragTarget) {
-      dragTarget.parent.toLocal(event.global, null, dragTarget.position);
+      // alert(event.global)
+      // dragTarget.parent.setTransform(event.global.x,event.global.y);
+      dragTarget.x = event.global.x
     }
   }
 

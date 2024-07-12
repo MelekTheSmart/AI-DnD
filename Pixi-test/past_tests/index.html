@@ -10,7 +10,7 @@
     <script type="module">
       // Create the application helper and add its render target to the page
       const app = new PIXI.Application();
-      await app.init({});
+      await app.init({ resizeTo: window++ });
       document.body.appendChild(app.canvas);
 
       // Create the sprite and add it to the stage
