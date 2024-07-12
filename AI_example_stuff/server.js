@@ -9,10 +9,6 @@ const port = 8080;
 app.use(express.json());
 app.use(express.static("public"));
 
-const openai = new OpenAI({
-  //put your API key here
-});
-
 function helloWorld(appendString) {
   let hello = "Hello World! " + appendString;
   console.log(hello);
