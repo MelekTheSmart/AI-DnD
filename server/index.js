@@ -47,7 +47,7 @@ async function populateRecursive(data, model) {
   let children = model.children
   for (let i = 0; i < children.length; i++) {
     let child = children[i]
-    if (!(child.name in data)) continue
+    if (!(child.name in data)) continue;
     let childData = await child.model.findOne({_id: data[child.name]}).lean()
     if (childData == null) continue;
     data[child.name] = childData
@@ -70,12 +70,6 @@ app.use(express.json());
 
 // This is where the general endpoints are defined
 
-app.get("/users/:username", async (req, res) => {
-  let username = req.params.username
-  let users = await User.findOne({username}).select("-password");
-  res.status(200).json(users);
-})
-
 app.post("/users", async (req, res) => {
   let user = await assembleObjectRecursive([req.body])
   user = user[0]
@@ -84,10 +78,13 @@ app.post("/users", async (req, res) => {
 
 app.get("/users/:username", async (req, res) => {
   let username = req.params.username
-  let user = await User.findOne({username})
-  populateRecursive(user);
-  res.send(user);
+  let user = await User.findOne({username}).lean()
+  await populateRecursive(user, User);
+  console.log(user);
+  res.json(user);
 })
+
+app.get("/
 
 // This is where the server is listening
 app.listen(8080, function () {
@@ -98,7 +95,6 @@ app.listen(8080, function () {
 // This is where test code goes
 async function test() {
   data = await User.findOne({username: "don"}).lean()
-  populateRecursive(data, User);
+  await populateRecursive(data, User);
   console.log(data)
 }
-test()
