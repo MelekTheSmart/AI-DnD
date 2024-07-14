@@ -18,15 +18,22 @@ let userSchema = new Schema({ // user
 })
 
 let campaignSchema = new Schema({ // campaign
+  owner: {type: Schema.Types.ObjectId, ref: "User"},
+  description: String,
   sessions: [{type: Schema.Types.ObjectId, ref: "Session"}]
 })
 
 let dndSessionSchema = new Schema({ // session
+  notes: String,
+  owner: {type: Schema.Types.ObjectId, ref: "User"},
   encounters: [{type: Schema.Types.ObjectId, ref: "Encounter"}],
-  players: [{type: Schema.Types.ObjectId, ref: "Player"}]
+  players: [{type: Schema.Types.ObjectId, ref: "Creature"}]
 })
 
 let encounterSchema = new Schema({ // encounter
+  owner: {
+    type: Schema.Types.ObjectId, ref: "User"
+  },
   players: [
     {
       type: Schema.Types.ObjectId,
@@ -39,13 +46,18 @@ let encounterSchema = new Schema({ // encounter
       ref: "Creature"
     }
   ],
-  map: [
-
-  ]
+  map: [{
+    type: Schema.Types.ObjectId,
+    ref: "Map",
+    validate: function(p) {
+      return p.length == 1;
+    }
+  }]
 })
 
-
 let creatureSchema = new Schema({ // creature
+  owner: {type: Schema.Types.ObjectId, ref: "User", required: true},
+  
   position: {
     type: [Number],
     validate: {
@@ -59,6 +71,7 @@ let creatureSchema = new Schema({ // creature
 })
 
 let statSchema = new Schema({ // statblock
+  owner: {type: Schema.Types.ObjectId, ref: "User", required: true},
   name: { type: String, required: true },
   size: { type: String, enum: ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'] },
   type: { type: String, required: true },

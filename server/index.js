@@ -3,7 +3,6 @@ const cors = require("cors");
 const {User, Session, Statblock, Creature, Encounter} = require("./model");
 const {parse} = require('key-value-parser')
 const app = express();
-const mongoose = require('mongoose')
 
 
 // utility
@@ -96,5 +95,6 @@ app.listen(8080, function () {
 async function test() {
   data = await User.findOne({username: "don"}).lean()
   await populateRecursive(data, User);
+
   console.log(data)
 }
