@@ -7,19 +7,71 @@ mongoose.connect(process.env.MONGO_URL);
 
 // This is the Mongoose Schema section
 
-let userSchema = new Schema({
-  username: {type: String, required: [true, "Username required"]},
-  password: {type: String, required: [true, "Password required"]},
-  sessions: [{type: Schema.Types.objectId, ref: "Session"}],
+let userSchema = new Schema({ // user
+  username: {
+    type: String, required: [true, "Username required"]
+  },
+  password: {
+    type: String, required: [true, "Password required"]
+  },
+  campaigns: [{type: Schema.Types.ObjectId, ref: "Campaign"}]
 })
 
-let dndSessionSchema = new Schema({
-  encounters: [{type: Schema.Types.ObjectId, ref: "Encounter"}],
+let campaignSchema = new Schema({ // campaign
   owner: {type: Schema.Types.ObjectId, ref: "User"},
-  players: [{type: Schema.Types.ObjectId, ref: "Player"}]
+  description: String,
+  sessions: [{type: Schema.Types.ObjectId, ref: "Session"}]
 })
 
-let statSchema = new Schema({
+let dndSessionSchema = new Schema({ // session
+  notes: String,
+  owner: {type: Schema.Types.ObjectId, ref: "User"},
+  encounters: [{type: Schema.Types.ObjectId, ref: "Encounter"}],
+  players: [{type: Schema.Types.ObjectId, ref: "Creature"}]
+})
+
+let encounterSchema = new Schema({ // encounter
+  owner: {
+    type: Schema.Types.ObjectId, ref: "User"
+  },
+  players: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Creature"
+    }
+  ],
+  creatures: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Creature"
+    }
+  ],
+  map: [{
+    type: Schema.Types.ObjectId,
+    ref: "Map",
+    validate: function(p) {
+      return p.length == 1;
+    }
+  }]
+})
+
+let creatureSchema = new Schema({ // creature
+  owner: {type: Schema.Types.ObjectId, ref: "User", required: true},
+  
+  position: {
+    type: [Number],
+    validate: {
+      validator: function(p) {
+        return p.length === 2;
+      }
+    }
+  },
+  stats: [{type: Schema.Types.ObjectId, ref: "Statblock"}],
+  sprite: {type: String, required: false}
+})
+
+let statSchema = new Schema({ // statblock
+  owner: {type: Schema.Types.ObjectId, ref: "User", required: true},
   name: { type: String, required: true },
   size: { type: String, enum: ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'] },
   type: { type: String, required: true },
@@ -70,48 +122,33 @@ let statSchema = new Schema({
   homebrew: [String]
 })
 
-let creatureSchema = new Schema({
-  position: {
-    type: [Number],
-    validate: {
-      validator: function(p) {
-        return p.length === 2;
-      }
-    }
-  },
-  stats: {type: Schema.Types.ObjectId, ref: "Statblock"},
-  sprite: {type: String, required: false}
-})
-
-let encounterSchema = new Schema({
-  players: [
-    {
-      type: Schema.Type.ObjectId,
-      ref: "Creature"
-    }
-  ],
-  enemies: [
-    {
-      type: Schema.Type.ObjectId,
-      ref: "Creature"
-    }
-  ],
-  map: [
-
-  ]
-})
+userSchema.methods.validatePassword = (password) => {
+  console.log(password);
+  return true;
+}
 
 // This is the mongoose model declaration field
 
 let User = mongoose.model("User", userSchema);
+let Campaign = mongoose.model("Campaign", campaignSchema);
 let Session = mongoose.model("Session", dndSessionSchema);
+let Encounter = mongoose.model("Encounter", encounterSchema);
+let Creature = mongoose.model("Creature", creatureSchema);
 let Statblock = mongoose.model("Statblock", statSchema);
-let creature = mongoose.model("Creature", creatureSchema);
+
+User.children = [{name: "campaigns", model: Campaign}]
+Campaign.children = [{name: "sessions", model: Session}]
+Session.children = [{name: "encounters", model: Encounter}]
+Encounter.children = [{name: "players", model: Creature}, {name: "creatures", model: Creature}]
+Creature.children = [{name: "stats", model: Statblock}]
 
 
 //export field
 module.exports = {
   User,
+  Campaign,
   Session,
-
+  Encounter,
+  Creature,
+  Statblock,
 };
