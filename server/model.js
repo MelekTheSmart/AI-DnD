@@ -3,6 +3,12 @@ const bcrypt = require("bcrypt");
 const { Schema } = mongoose;
 require("dotenv").config();
 
+// protocol to add a new schema:
+// 1. add schema
+// 2. make model
+// 3. update its parent and children to refer to it
+// 4. update its model to refer to its parent and children
+
 mongoose.connect(process.env.MONGO_URL);
 
 // This is the Mongoose Schema section
@@ -53,6 +59,22 @@ let encounterSchema = new Schema({ // encounter
       return p.length == 1;
     }
   }]
+})
+
+let mapSchema = new Schema({
+})
+
+let colors = ["FCE205", "FCB201", "ED6A09", "F9965B", "A51002", "DB1102", "CD5D51", "FA187D", "F34C74", "FB99A6", "FC4648", "A7034C", "81539C", "BD93D3", "92BAE5", "B8E4FD", "0479CB", "050573", "028C7D", "41E2A3", "495A10", "6CA138", "01A210", "84E248", "F1D18B", "9F7A46", "773E0B", "33200C", "FFFEFC", "ACACAC", "121212"]
+
+colors.forEach((color) => {
+  mapSchema.add({ color: {
+    type: [Number],
+    validate: {
+      validator: function(p) {
+        return p.length === 2;
+      }
+    }
+  }});
 })
 
 let creatureSchema = new Schema({ // creature
@@ -133,14 +155,27 @@ let User = mongoose.model("User", userSchema);
 let Campaign = mongoose.model("Campaign", campaignSchema);
 let Session = mongoose.model("Session", dndSessionSchema);
 let Encounter = mongoose.model("Encounter", encounterSchema);
+let Map = mongoose.model("Map", mapSchema);
 let Creature = mongoose.model("Creature", creatureSchema);
 let Statblock = mongoose.model("Statblock", statSchema);
+
 
 User.children = [{name: "campaigns", model: Campaign}]
 Campaign.children = [{name: "sessions", model: Session}]
 Session.children = [{name: "encounters", model: Encounter}]
-Encounter.children = [{name: "players", model: Creature}, {name: "creatures", model: Creature}]
+Encounter.children = [{name: "players", model: Creature}, {name: "creatures", model: Creature}, {name: "map", model: Map}]
+Map.children = null;
 Creature.children = [{name: "stats", model: Statblock}]
+Statblock.children = null;
+
+
+User.parent = null;
+Campaign.parent = {name: "user", model: User};
+Session.parent = {name: "campaign", model: Campaign};
+Encounter.parent = {name: "session", model: Session};
+Map.parent = {name: "encounter", model: Encounter}
+Creature.parent = {name: "encounter", model: Encounter};
+Statblock.parent = {name: "creature", model: Creature};
 
 
 //export field
