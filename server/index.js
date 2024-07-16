@@ -16,12 +16,12 @@ function getIds(data) {
   return ids;
 }
 
+function error(message, res, code=400) {
+  res.status(code).send(message);
+}
+
 async function appendChild(data, childname, parentId, ownerId, model) {
-  let child = assembleObjectRecursive(data, model, ownerId)[0];
-  console.log("model:", model.parent.model);
-  console.log("find all:", await model.parent.model.find())
-  console.log("query by id:", await model.parent.model.findOne({_id: parentId}));
-  console.log("id:", parentId);
+  let child = await assembleObjectRecursive([data], model, ownerId);
   let parentObj = await model.parent.model.findById(parentId);
   parentObj[childname].push(child);
   await parentObj.save()
@@ -44,15 +44,18 @@ async function assembleObjectRecursive(data, model=User, owner=null) {
   if (model.children == null) {
     return await save(data, model)
   }
-
   let children = model.children;
+  console.log(data);
   for (let i = 0; i < data.length; i++) {
+    console.log(data[i]);
     for (let j = 0; j < children.length; j++) {
       if (!["object", "mongodb"].includes(typeof(data[i]))) {
         continue
       }
       let child = children[j]
       if (!(child.name in data[i])) {
+        console.log(child.name);
+        console.log(data[i]);
         continue
       }
       let newdata = data[i][child.name]
@@ -95,7 +98,6 @@ app.use(express.json());
 app.post("/users", async (req, res) => {
   let user = new User(req.body)
   user.campaigns = await assembleObjectRecursive(req.body.campaigns, Campaign, user._id)
-  console.log(user);
   await user.save();
   res.status(200).json(user);
 })
@@ -108,22 +110,32 @@ app.get("/users/:username", async (req, res) => {
 })
 
 app.post("/campaigns/:ownerId/:parentId", async (req, res) => {
-  let parentId = req.params.parentId;
-  let ownerId = req.params.ownerId;
-  let campaign = await assembleObjectRecursive([req.body], Campaign, ownerId)[0]
-  let user = await User.findOne({id: parentId});
-  user.campaigns.push(campaign);
-  await user.save()
+  let campaign = await appendChild(req.body, "campaigns", req.params.parentId, req.params.ownerId, Campaign);
   res.status(200).json(campaign);
 })
 
-app.post("/sessions/:ownerId/:parentId", async (req, res) => {
-  let parentId = req.params.parentId;
-  let ownerId = req.params.ownerId;
-  let session = await appendChild(req.body, "sessions", parentId, ownerId, Session)
+app.post("/sessions/:parentId/:ownerId", async (req, res) => {
+  let session = await appendChild(req.body, "sessions", req.params.parentId, req.params.ownerId, Session)
   res.status(200).json(session);
 })
 
+app.post("/encounters/:parentId/:ownerId", async (req, res) => {
+  let encounter = await appendChild(req.body, "encounters", req.params.parentId, req.params.ownerId, Encounter);
+  res.status(200).json(campaign);
+})
+
+app.post("/creatures/:parentId/:ownerId", async (req, res) => {
+  let creature = await appendChild(req.body, "creatures", req.params.parentId, req.params.ownerId, Creature);
+  res.status(200).json(creature);
+})
+
+app.post("/maps/:parentId/:ownerId", async (req, res) => {
+  let map = await appendChild(req.body, "maps", req.params.parentId, req.params.ownerId, Map);
+})
+
+app.post("/statblocks/:parentId/:ownerId", async (req, res) => {
+  let statblock = await appendChild(req,body, "statblocks", req.params.parentId, req.params.ownerId, Statblock);
+})
 
 // This is where the server is listening
 app.listen(8080, function () {
