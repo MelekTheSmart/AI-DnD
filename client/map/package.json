@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@pixi-essentials/transformer": "^3.0.4",
     "pixi.js": "^8.2.5"
   }
 }
