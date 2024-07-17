@@ -29,7 +29,7 @@ app.use(cors());
 
   app.get("/users/:username", users.getUser);
 
-  app.get("/public/:type", users.getPub);
+  app.get("/public/:type", () => {});
 
   app.post("/:type/:parentId/:ownerId", users.postObj);
 
