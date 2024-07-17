@@ -37,6 +37,7 @@ let dndSessionSchema = new Schema({ // session
 })
 
 let encounterSchema = new Schema({ // encounter
+  notes: String,
   owner: {
     type: Schema.Types.ObjectId, ref: "User"
   },
@@ -178,6 +179,8 @@ Creature.parent = {name: "encounter", model: Encounter};
 Statblock.parent = {name: "creature", model: Creature};
 
 
+let MODELS = {"users": User, "campaigns": Campaign, "sessions": Session, "encounters": Encounter, "maps": Map, "creatures": Creature, "statblocks": Statblock}
+
 //export field
 module.exports = {
   User,
@@ -186,4 +189,5 @@ module.exports = {
   Encounter,
   Creature,
   Statblock,
+  MODELS,
 };
