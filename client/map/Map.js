@@ -1,6 +1,5 @@
 // import { Transformer } from "node_modules/@pixi-essentials/transformer";
 (async () => {
-  console.log(TYPES);
   // Initialize PIXI.js application
   const app = new PIXI.Application({
     width: window.innerWidth,
@@ -249,11 +248,22 @@
     }
     outline.addChild(rotateHandle);
     // Rectangle with fill and border
+    const spriteCont = new PIXI.Container();
+    spriteCont.interactive = true;
+    spriteCont.buttonMode = true;
+    spriteCont.width = 600;
+    spriteCont.height = 600;
+    console.log(sprite.texture.width);
+    console.log(spriteCont.width);
+    const outline_rect = new PIXI.Graphics();
+    outline_rect.lineStyle(2, 0x00ff00); // Green border, 2px thick
+    outline_rect.drawRect(0, 0, spriteCont.width, spriteCont.height); // x, y, width, height
+    spriteCont.addChild(outline_rect);
     const node = new PIXI.Graphics();
     node.lineStyle(2, 0x00ff00); // Green border, 2px thick
-    node.drawCircle(0, 0, 32, 32); // x, y, width, height
+    node.drawCircle(0, 0, 300, 300); // x, y, width, height
     node.hitArea = new PIXI.Circle(0, 0, 32, 32);
-    node.visible = false;
+    node.visible = true;
     node.interactive = true;
     node.buttonMode = true;
     node.on("mousedown", (event) => {
@@ -266,19 +276,18 @@
       lastX = event.data.global.x;
       lastY = event.data.global.y;
     });
-    console.log(sprite.width);
-    console.log(sprite.height);
-    sprite.addChild(node);
+    // spriteCont.addChild(node);
+    // spriteCont.addChild(sprite);
     sprite.addChild(outline);
 
-    sprite.on("rightclick", (event) => {
-      console.log(sprite);
+    spriteCont.on("rightclick", (event) => {
+      console.log(spriteCont);
     });
-    sprite.on("pointerover", (event) => {
-      sprite.children[0].visible = true;
+    spriteCont.on("pointerover", (event) => {
+      node.visible = true;
     });
-    sprite.on("pointerout", (event) => {
-      sprite.children[0].visible = false;
+    spriteCont.on("pointerout", (event) => {
+      node.visible = false;
     });
 
     sprite.on("pointermove", (event) => {
@@ -293,8 +302,8 @@
     });
 
     sprite.on("pointerup", () => {
-      sprite.x = 64 * Math.round(sprite.x / 64);
-      sprite.y = 64 * Math.round(sprite.y / 64);
+      sprite.x = 64 * Math.round(sprite.x / 64) + 32;
+      sprite.y = 64 * Math.round(sprite.y / 64) + 32;
       sprite.alpha = 1;
       isDragging = false;
       dragData = null;
@@ -307,9 +316,7 @@
     sprite.on("wheel", (event) => {
       console.log(event);
     });
-    transformCont = new PIXI() - ESSENTIALATransformer();
-    transformCont.addChild(sprite);
-    mapContainer.addChild(transformCont);
+    mapContainer.addChild(spriteCont);
   }
 
   const spriteTexture = await PIXI.Assets.load("sample.png");
