@@ -3,17 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+    <title>Vue BoilerPlate with Function Calling</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <title>Vue BoilerPlate</title>
+    <style>
+      /* Add your styles here */
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      input,
+      button {
+        margin: 10px 0;
+        padding: 5px;
+      }
+      pre {
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 5px;
+      }
+    </style>
   </head>
   <body>
     <div id="app">
-      <div id="otherstuff">
-        <h1>{{ titleh1 }}</h1>
+      <h1>{{ title }}</h1>
+      <div>
+        <input
+          v-model="userInput"
+          @keyup.enter="sendRequest"
+          placeholder="Enter your request"
+        />
+        <button @click="sendRequest">Send</button>
       </div>
-
-      <div id="calculators"></div>
+      <div v-if="response">
+        <h2>Response:</h2>
+        <pre>{{ response }}</pre>
+      </div>
     </div>
     <script src="app.js"></script>
   </body>
