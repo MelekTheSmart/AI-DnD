@@ -1,11 +1,45 @@
+// ==== ends a section
+
+function Window() {
+  let members = {
+  }
+  
+  let methods = {
+  }
+
+  let tick = function() {
+  }
+
+  let tickInterval = 100
+
+  let obj = {
+    ...members,
+    ...methods,
+    tick: setInterval(tick(), tickInterval);
+  };
+}
+
+function Canvas() {
+}
+
 // import { Transformer } from "node_modules/@pixi-essentials/transformer";
-(async () => {
+let main = (async () => {
+
   // Initialize PIXI.js application
   const app = new PIXI.Application({
     width: window.innerWidth,
     height: window.innerHeight,
     backgroundColor: 0x1099bb,
   });
+  console.log(app);
+
+  // set camera
+
+  var CAMERA = Camera(app.view, window)
+  setInterval(() => {CAMERA.tick()}, 100);
+
+  // ====
+
   document.getElementById("game-container").appendChild(app.view);
   let GameMap = document.getElementById("game-container");
   // Create a container for the map
@@ -334,8 +368,6 @@
   console.log(await PIXI.Assets.load("GridONE.png"));
 
   const tileSize = 64;
-  const viewportWidth = app.screen.width;
-  const viewportHeight = app.screen.height;
   let tiles = [];
 
   // Function to create a tile
@@ -355,13 +387,16 @@
     const gridX = Math.floor(cameraX / tileSize);
     const gridY = Math.floor(cameraY / tileSize) + 1;
 
+    gridContainer.height = CAMERA.getHeight();
+    gridContainer.width = CAMERA.getWidth();
+
     tiles.forEach((tile) => {
       let tileX = tile.position.x;
       let tileY = tile.position.y;
       if (
         tileX < cameraX - 2 * tileSize ||
-        tileX > cameraX + viewportWidth ||
-        tileY > cameraY + viewportHeight + tileSize ||
+        tileX > cameraX + CAMERA.getWidth() ||
+        tileY > cameraY + CAMERA.getHeight() ||
         tileY < cameraY - 2 * tileSize
       ) {
         gridContainer.removeChild(tile);
@@ -373,12 +408,12 @@
 
     for (
       let row = gridY - 1;
-      row <= gridY + Math.ceil(viewportHeight / tileSize);
+      row <= gridY + Math.ceil(CAMERA.getHeight() / tileSize);
       row++
     ) {
       for (
         let col = gridX - 1;
-        col <= gridX + Math.ceil(viewportWidth / tileSize);
+        col <= gridX + Math.ceil(CAMERA.getWidth() / tileSize);
         col++
       ) {
         let tileExists = false;
@@ -401,6 +436,8 @@
   });
 
   window.addEventListener("resize", () => {
-    app.renderer.resize(window.innerWidth, window.innerHeight);
+    // app.renderer.resize(window.innerWidth, window.innerHeight);
   });
-})();
+});
+
+main();
