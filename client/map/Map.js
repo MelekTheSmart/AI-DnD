@@ -121,13 +121,8 @@
       if (Math.abs(deltaSX) > Math.abs(deltaSY)) {
         resizeTarget.width = resizeTarget.width + deltaSX * 1.2 * directionx;
         resizeTarget.height = resizeTarget.height + deltaSX * 1.2 * directionx;
-        resizeTarget.children[0].width = 32;
-        resizeTarget.children[0].height = 32;
-      } else {
         resizeTarget.width = resizeTarget.width + deltaSY * 1.2 * directiony;
         resizeTarget.height = resizeTarget.height + deltaSY * 1.2 * directiony;
-        resizeTarget.children[0].width = 32;
-        resizeTarget.children[0].height = 32;
       }
       lastSizeX = event.data.global.x;
       lastSizeY = event.data.global.y;
@@ -143,7 +138,7 @@
   });
   function createSprite(texture, x, y) {
     const sprite = new PIXI.Sprite(texture);
-    sprite.position.set(x, y);
+    // sprite.position.set(x, y);
     sprite.anchor.set(0.5);
     sprite.interactive = true;
     sprite.buttonMode = true;
@@ -251,9 +246,9 @@
     const spriteCont = new PIXI.Container();
     spriteCont.interactive = true;
     spriteCont.buttonMode = true;
-    spriteCont.width = 600;
-    spriteCont.height = 600;
-    console.log(sprite.texture.width);
+    spriteCont.x = x;
+    spriteCont.y = y;
+    // console.log(sprite.texture.width);
     console.log(spriteCont.width);
     const outline_rect = new PIXI.Graphics();
     outline_rect.lineStyle(2, 0x00ff00); // Green border, 2px thick
@@ -261,23 +256,25 @@
     spriteCont.addChild(outline_rect);
     const node = new PIXI.Graphics();
     node.lineStyle(2, 0x00ff00); // Green border, 2px thick
-    node.drawCircle(0, 0, 300, 300); // x, y, width, height
+    node.drawCircle(0, 0, 32, 32); // x, y, width, height
     node.hitArea = new PIXI.Circle(0, 0, 32, 32);
     node.visible = true;
     node.interactive = true;
     node.buttonMode = true;
     node.on("mousedown", (event) => {
+      actualX = spriteCont.x;
+      actualY = spriteCont.y;
       isDragging = true;
       console.log(mapContainer.children);
-      mapContainer.setChildIndex(sprite, mapContainer.children.length - 1);
-      sprite.alpha = 0.5;
+      mapContainer.setChildIndex(spriteCont, mapContainer.children.length - 1);
+      spriteCont.alpha = 0.5;
       isMapDragging = false;
       dragData = event.data;
       lastX = event.data.global.x;
       lastY = event.data.global.y;
     });
-    // spriteCont.addChild(node);
-    // spriteCont.addChild(sprite);
+    spriteCont.addChild(sprite);
+    spriteCont.addChild(node);
     sprite.addChild(outline);
 
     spriteCont.on("rightclick", (event) => {
@@ -290,23 +287,29 @@
       node.visible = false;
     });
 
-    sprite.on("pointermove", (event) => {
+    spriteCont.on("pointermove", (event) => {
       if (isDragging) {
         const deltaSX = event.data.global.x - lastX;
         const deltaSY = event.data.global.y - lastY;
-        sprite.x = sprite.x + deltaSX;
-        sprite.y = sprite.y + deltaSY;
+        spriteCont.x = spriteCont.x + deltaSX;
+        spriteCont.y = spriteCont.y + deltaSY;
+        actualX = actualX + deltaSX;
+        actualY = actualY + deltaSY;
+        spriteCont.x = 64 * Math.round(actualX / 64);
+        spriteCont.y = 64 * Math.round(actualY / 64);
         lastX = event.data.global.x;
         lastY = event.data.global.y;
       }
     });
 
-    sprite.on("pointerup", () => {
-      sprite.x = 64 * Math.round(sprite.x / 64) + 32;
-      sprite.y = 64 * Math.round(sprite.y / 64) + 32;
-      sprite.alpha = 1;
-      isDragging = false;
-      dragData = null;
+    spriteCont.on("pointerup", () => {
+      if (isDragging) {
+        spriteCont.x = 64 * Math.round(spriteCont.x / 64);
+        spriteCont.y = 64 * Math.round(spriteCont.y / 64);
+        spriteCont.alpha = 1;
+        isDragging = false;
+        dragData = null;
+      }
     });
 
     sprite.on("pointerupoutside", () => {
