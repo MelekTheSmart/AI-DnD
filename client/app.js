@@ -9,6 +9,19 @@ const app = Vue.createApp({
     };
   },
   methods: {
+    async examplecode() {
+      // example code for how user_id change works, and deleting message history
+      fetch("/api/function-call", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          input: "Your message here",
+          userId: "user_id_here",
+        }),
+      });
+
+      fetch("/api/message-history/user_id_here", { method: "DELETE" });
+    },
     async sendRequest() {
       if (this.userInput.trim() === "") return;
 
