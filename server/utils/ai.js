@@ -612,7 +612,8 @@ async function mothercaller(messages) {
         type: "function",
         function: {
           name: "callChatGPTWithFunctions",
-          description: "Sends a prompt to a ChatGPT-3.5 turbo function caller.",
+          description:
+            "Sends a prompt to a ChatGPT-3.5 turbo function caller ONLY if the user calls with a '/' to indicate command.",
           parameters: {
             type: "object",
             properties: {

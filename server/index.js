@@ -59,7 +59,8 @@ app.post("/api/function-call", express.json(), async (req, res) => {
   let messages = [
     {
       role: "system",
-      content: "You are a helpful assistant that can use various functions.",
+      content:
+        "You are a helpful assistant that can use various functions ONLY if user prompts with a command by signaling with a '/' before any potential command.",
     },
     {
       role: "user",
