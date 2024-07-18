@@ -53,78 +53,30 @@ app.delete("/:type/:id", users.delObj);
 app.post("/templates", () => {});
 
 // AI endpoints
-// Modified AI endpoint to save message history
-app.post("/api/function-call", async (req, res) => {
-  const { input, userId } = req.body;
-  console.log("test");
-  let messages = [
-    {
-      role: "system",
-      content:
-        "You are a helpful assistant that can call a function caller AI model ONLY if user prompts with a command by signaling with a '/' before any potential command.",
-    },
-    {
-      role: "user",
-      content: input,
-    },
-  ];
-
+app.post("/api/chat", async (req, res) => {
   try {
-    // Save user message
-    await Message.create({ userId, content: input, role: "user" });
+    const { messages } = req.body;
 
-    const response = await AI.mothercaller(messages);
+    // Validate input
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Invalid input. Messages array is required." });
+    }
 
-    // Save AI response
-    await Message.create({ userId, content: response, role: "assistant" });
+    // Generate AI response
+    const aiResponse = await AI.generateResponse(messages);
 
-    res.json({ response });
+    // Send the AI response back to the client
+    res.json({ response: aiResponse });
   } catch (error) {
-    console.error("Error:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while processing your request." });
-  }
-});
-app.post("/api/function-call/nocontext", express.json(), async (req, res) => {
-  const { input } = req.body;
-  console.log("test");
-  let messages = [
-    {
-      role: "system",
-      content:
-        "You are a helpful assistant that can call a function caller AI model ONLY if user prompts with a command by signaling with a '/' before any potential command.",
-    },
-    {
-      role: "user",
-      content: input,
-    },
-  ];
-  try {
-    const response = await AI.mothercaller(messages);
-    res.json({ response });
-  } catch (error) {
-    console.error("Error:", error);
+    console.error("Error in AI chat:", error);
     res
       .status(500)
       .json({ error: "An error occurred while processing your request." });
   }
 });
 
-// New endpoint to delete message history
-app.delete("/api/message-history/:userId", async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-    await Message.deleteMany({ userId });
-    res.json({ message: "Message history deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting message history:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while deleting message history." });
-  }
-});
 // This is where the server is listening
 app.listen(8080, function () {
   console.log("server is running on http://localhost:8080...");
