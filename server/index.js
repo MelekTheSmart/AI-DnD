@@ -86,6 +86,30 @@ app.post("/api/function-call", async (req, res) => {
       .json({ error: "An error occurred while processing your request." });
   }
 });
+app.post("/api/function-call/nocontext", express.json(), async (req, res) => {
+  const { input } = req.body;
+  console.log("test");
+  let messages = [
+    {
+      role: "system",
+      content:
+        "You are a helpful assistant that can call a function caller AI model ONLY if user prompts with a command by signaling with a '/' before any potential command.",
+    },
+    {
+      role: "user",
+      content: input,
+    },
+  ];
+  try {
+    const response = await AI.mothercaller(messages);
+    res.json({ response });
+  } catch (error) {
+    console.error("Error:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing your request." });
+  }
+});
 
 // New endpoint to delete message history
 app.delete("/api/message-history/:userId", async (req, res) => {
