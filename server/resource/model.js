@@ -198,14 +198,6 @@ let statSchema = new Schema({
   homebrew: [String],
 });
 
-// New Message Schema
-let messageSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  content: { type: String, required: true },
-  role: { type: String, required: true },
-  timestamp: { type: Date, default: Date.now },
-});
-
 userSchema.methods.validatePassword = (password) => {
   console.log(password);
   return true;
@@ -220,7 +212,6 @@ let Encounter = mongoose.model("Encounter", encounterSchema);
 let Map = mongoose.model("Map", mapSchema);
 let Creature = mongoose.model("Creature", creatureSchema);
 let Statblock = mongoose.model("Statblock", statSchema);
-let Message = mongoose.model("Message", messageSchema);
 
 User.children = [{ name: "campaigns", model: Campaign }];
 Campaign.children = [{ name: "sessions", model: Session }];
@@ -233,7 +224,6 @@ Encounter.children = [
 Map.children = null;
 Creature.children = [{ name: "stats", model: Statblock }];
 Statblock.children = null;
-Message.children = null;
 
 User.parent = null;
 Campaign.parent = { name: "user", model: User };
@@ -242,7 +232,6 @@ Encounter.parent = { name: "session", model: Session };
 Map.parent = { name: "encounter", model: Encounter };
 Creature.parent = { name: "encounter", model: Encounter };
 Statblock.parent = { name: "creature", model: Creature };
-Message.parent = { name: "encounter", model: User };
 
 let MODELS = {
   users: User,
@@ -252,7 +241,6 @@ let MODELS = {
   maps: Map,
   creatures: Creature,
   statblocks: Statblock,
-  messages: Message,
 };
 
 //export field
@@ -263,6 +251,5 @@ module.exports = {
   Encounter,
   Creature,
   Statblock,
-  Message,
   MODELS,
 };
