@@ -674,4 +674,68 @@ async function mothercaller(messages) {
   return finalResponse.choices[0].message.content;
 }
 
+async function createStatBlock(userMessage) {
+  const systemMessage = {
+    role: "system",
+    content: `You are a helpful assistant that creates character stat blocks. 
+      Here is the format for creating a stat block:
+  
+      {
+        "name": "string", // Optional
+        "size": "Tiny/Small/Medium/Large/Huge/Gargantuan", // Required
+        "type": "string", // Required
+        "alignment": "string", // Required
+        "armorClass": number, // Required
+        "hitPoints": number, // Required
+        "speed": { // Required
+          "walk": number,
+          "fly": number,
+          "swim": number,
+          "climb": number,
+          "burrow": number
+        },
+        "abilityScores": { // Required
+          "strength": number, // Required
+          "dexterity": number, // Required
+          "constitution": number, // Required
+          "intelligence": number, // Required
+          "wisdom": number, // Required
+          "charisma": number // Required
+        },
+        "savingThrows": { // Required
+          "strength": number,
+          "dexterity": number,
+          "constitution": number,
+          "intelligence": number,
+          "wisdom": number,
+          "charisma": number
+        },
+        "skills": [ // Required
+          { "name": "string", "modifier": number } 
+        ],
+        "senses": ["string"], // Optional
+        "languages": ["string"], // Optional
+        "challengeRating": number, // Required
+        "specialAbilities": [ // Optional
+          { "name": "string", "description": "string" }
+        ],
+        "actions": [ // Required
+          { "name": "string", "description": "string", "attackBonus": number, "damage": "string" }
+        ],
+        "legendaryActions": [ // Required, unless creature is expected to have none
+          { "name": "string", "description": "string" }
+        ]
+      }`,
+  };
+
+  const messages = [systemMessage, { role: "user", content: userMessage }];
+
+  let chat = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages,
+  });
+
+  return chat.choices[0].message.content;
+}
+
 module.exports = { mothercaller };

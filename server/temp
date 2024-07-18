@@ -67,3 +67,82 @@ async function populateRecursive(data, model) {
     await populateRecursive(childData, child.model)
   }
 }
+
+
+// Modified AI endpoint to save message history
+// it appears to be faulty, will need to be fixed to use
+// app.post("/api/function-call", async (req, res) => {
+//   const { input, userId } = req.body;
+//   console.log("test");
+//   let messages = [
+//     {
+//       role: "system",
+//       content:
+//         "You are a helpful assistant that can call a function caller AI model ONLY if user prompts with a command by signaling with a '/' before any potential command.",
+//     },
+//     {
+//       role: "user",
+//       content: input,
+//     },
+//   ];
+
+//   try {
+//     // Save user message
+//     await Message.create({ userId, content: input, role: "user" });
+
+//     const response = await AI.mothercaller(messages);
+
+//     // Save AI response
+//     await Message.create({ userId, content: response, role: "assistant" });
+
+//     res.json({ response });
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res
+//       .status(500)
+//       .json({ error: "An error occurred while processing your request." });
+//   }
+// });
+
+// Modified AI endpoint to not require context/message history.
+// will need to be modified, system prompt and interaction with frontend, as this
+// will be used to generate stats
+app.post("/api/function-call/nocontext", express.json(), async (req, res) => {
+  const { input } = req.body;
+  console.log("test");
+  let messages = [
+    {
+      role: "system",
+      content:
+        "You are a helpful assistant that can call a function caller AI model ONLY if user prompts with a command by signaling with a '/' before any potential command.",
+    },
+    {
+      role: "user",
+      content: input,
+    },
+  ];
+  try {
+    const response = await AI.mothercaller(messages);
+    res.json({ response });
+  } catch (error) {
+    console.error("Error:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing your request." });
+  }
+});
+
+// New endpoint to delete message history
+app.delete("/api/message-history/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    await Message.deleteMany({ userId });
+    res.json({ message: "Message history deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting message history:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting message history." });
+  }
+});
