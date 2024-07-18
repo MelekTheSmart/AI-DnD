@@ -53,14 +53,15 @@ app.delete("/:type/:id", users.delObj);
 app.post("/templates", () => {});
 
 // AI endpoints
-app.post("/api/function-call", express.json(), async (req, res) => {
-  const { input } = req.body;
+// Modified AI endpoint to save message history
+app.post("/api/function-call", async (req, res) => {
+  const { input, userId } = req.body;
   console.log("test");
   let messages = [
     {
       role: "system",
       content:
-        "You are a helpful assistant that can use various functions ONLY if user prompts with a command by signaling with a '/' before any potential command.",
+        "You are a helpful assistant that can call a function caller AI model ONLY if user prompts with a command by signaling with a '/' before any potential command.",
     },
     {
       role: "user",
@@ -69,7 +70,14 @@ app.post("/api/function-call", express.json(), async (req, res) => {
   ];
 
   try {
-    const response = await mothercaller(messages);
+    // Save user message
+    await Message.create({ userId, content: input, role: "user" });
+
+    const response = await AI.mothercaller(messages);
+
+    // Save AI response
+    await Message.create({ userId, content: response, role: "assistant" });
+
     res.json({ response });
   } catch (error) {
     console.error("Error:", error);
@@ -79,6 +87,20 @@ app.post("/api/function-call", express.json(), async (req, res) => {
   }
 });
 
+// New endpoint to delete message history
+app.delete("/api/message-history/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    await Message.deleteMany({ userId });
+    res.json({ message: "Message history deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting message history:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting message history." });
+  }
+});
 // This is where the server is listening
 app.listen(8080, function () {
   console.log("server is running on http://localhost:8080...");

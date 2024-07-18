@@ -673,3 +673,5 @@ async function mothercaller(messages) {
 
   return finalResponse.choices[0].message.content;
 }
+
+module.exports = { mothercaller };
