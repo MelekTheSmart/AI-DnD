@@ -32,7 +32,6 @@ const app = Vue.createApp({
       if (this.userInput_one.trim() === "") return;
 
       // Add user message to history
-      this.messageHistory.push({ role: "user", content: this.userInput_one });
 
       try {
         const response = await fetch(`${URL}/api/chat`, {
@@ -52,6 +51,9 @@ const app = Vue.createApp({
 
         const data = await response.json();
         this.response_one = data.response;
+        //add user input to message history after going through index.js, pushing to messagehistory
+        //before sending messagehistory to api duplicates messages
+        this.messageHistory.push({ role: "user", content: this.userInput_one });
 
         // Add AI response to history
         this.messageHistory.push({
