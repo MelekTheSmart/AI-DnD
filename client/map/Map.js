@@ -1,63 +1,108 @@
-// ==== ends a section
 
-function Window() {
-  let members = {
-  }
-  
-  let methods = {
-  }
-
-  let tick = function() {
-  }
-
-  let tickInterval = 100
-
-  let obj = {
-    ...members,
-    ...methods,
-    tick: setInterval(tick(), tickInterval);
-  };
-}
-
-function Canvas() {
-}
-
-// import { Transformer } from "node_modules/@pixi-essentials/transformer";
-let main = (async () => {
-
+function initApp() {
   // Initialize PIXI.js application
-  const app = new PIXI.Application({
-    width: window.innerWidth,
-    height: window.innerHeight,
+
+  let gameWindow = document.getElementById("game-container");
+  let html = document.documentElement;
+
+  var state = GameState(gameWindow, html, [])
+
+  let app = new PIXI.Application({
+    width: state.getWidth(),
+    height: state.getHeight(),
     backgroundColor: 0x1099bb,
   });
-  console.log(app);
 
-  // set camera
+  state.app = app
 
-  var CAMERA = Camera(app.view, window)
-  setInterval(() => {CAMERA.tick()}, 100);
+  state.window.appendChild(state.app.view); // app.view is a canvas element
 
-  // ====
+  state.tileSize = 64;
 
-  document.getElementById("game-container").appendChild(app.view);
-  let GameMap = document.getElementById("game-container");
+  state.isResizing = false;
+
+  state.isPanning = false;
+
   // Create a container for the map
-  const mapContainer = new PIXI.Container();
-  app.stage.addChild(mapContainer);
 
-  const gridContainer = new PIXI.Container();
+  dragAndDropInit(state.window);
+  return state;
+}
+
+async function initMapContainer(state) {
+  let mapContainer = new PIXI.Container();
+  state.app.stage.addChild(mapContainer);
+
+  let gridContainer = new PIXI.Container();
+
+  gridContainer.tileTexture = await PIXI.Assets.load("GridONE.png");
+
+  gridContainer.tiles = [];
+
+
+  gridContainer.createTile = function(x, y) {
+    const tile = new PIXI.Sprite(this.tileTexture);
+    tile.anchor.set(0.5);
+    tile.position.set(x, y);
+    this.addChild(tile);
+    this.setChildIndex(tile, 0);
+    return tile;
+  }
+
   mapContainer.addChild(gridContainer);
-
   mapContainer.interactive = true;
   mapContainer.buttonMode = true;
   mapContainer.sortableChildren = true;
-  let isPanning = false;
-  let isResizing;
+  mapContainer.isDragging = false;
 
-  GameMap.addEventListener("drop", dropHandler);
-  GameMap.addEventListener("dragover", dragOverHandler);
+  mapContainer.gridContainer = gridContainer;
+  mapContainer.on("pointerdown", (event) => {
+    if (state.isPanning) {
+      mapContainer.isDragging = true;
+      lastMapX = event.data.global.x;
+      lastMapY = event.data.global.y;
+    }
+  });
 
+  mapContainer.on("pointermove", (event) => {
+    if (mapContainer.isDragging && state.isPanning) {
+      const deltaX = event.data.global.x - lastMapX;
+      const deltaY = event.data.global.y - lastMapY;
+      mapContainer.x += deltaX;
+      mapContainer.y += deltaY;
+      lastMapX = event.data.global.x;
+      lastMapY = event.data.global.y;
+    }
+  });
+  mapContainer.on("mousemove", (event) => {
+    if (state.isResizing) {
+      const deltaSX = event.data.global.x - lastSizeX;
+      const deltaSY = event.data.global.y - lastSizeY;
+      if (Math.abs(deltaSX) > Math.abs(deltaSY)) {
+        resizeTarget.width = resizeTarget.width + deltaSX * 1.2 * state.directionx;
+        resizeTarget.height = resizeTarget.height + deltaSX * 1.2 * state.directionx;
+        }
+      else if (Math.abs(deltaSX) < Math.abs(deltaSY)) {
+        resizeTarget.width = resizeTarget.width + deltaSY * 1.2 * state.directiony;
+        resizeTarget.height = resizeTarget.height + deltaSY * 1.2 * state.directiony;
+      }
+      lastSizeX = event.data.global.x;
+      lastSizeY = event.data.global.y;
+    }
+  });
+
+  mapContainer.on("pointerup", () => {
+    mapContainer.isDragging = false;
+  });
+
+  mapContainer.on("pointerupoutside", () => {
+    mapContainer.isDragging = false;
+  });
+
+  state.mapContainer = mapContainer;
+}
+
+function dragAndDropInit(element) {
   function dropHandler(event) {
     event.preventDefault();
     console.log("File(s) dropped");
@@ -79,10 +124,6 @@ let main = (async () => {
     };
 
     reader.readAsDataURL(file);
-    // console.log(reader.result);
-    // let dragTexture = PIXI.Texture.from(String(reader.result));
-    // createSprite(dragTexture, ev.screenX, ev.screenY);
-    // console.log("created");
   }
 
   function dragOverHandler(ev) {
@@ -91,28 +132,33 @@ let main = (async () => {
     // Prevent default behavior (Prevent file from being opened)
     ev.preventDefault();
   }
+
+  element.addEventListener("drop", dropHandler);
+  element.addEventListener("dragover", dragOverHandler);
+}
+
+async function main() {
+
+  var state = initApp();
+  await initMapContainer(state);
+  console.log(state.mapContainer);
+
   addEventListener("keydown", (event) => {});
 
   onkeydown = (event) => {
     if (event.code === "Space") {
-      isPanning = true;
-    }
-    if (event.code == "Shift") {
-      isResizing = true;
+      state.isPanning = true;
     }
   };
   addEventListener("keyup", (event) => {});
 
   onkeyup = (event) => {
     if (event.code === "Space") {
-      isPanning = false;
-    }
-    if (event.code == "Shift") {
-      isResizing = false;
+      state.isPanning = false;
     }
   };
 
-  GameMap.addEventListener(
+  state.window.addEventListener(
     "contextmenu",
     function (ev) {
       ev.preventDefault();
@@ -121,61 +167,10 @@ let main = (async () => {
     false
   );
 
-  let isMapDragging = false;
-  let isDragging = false;
-  let resizeTarget = null;
-  let lastMapX = 0;
-  let lastMapY = 0;
-  let lastX = 0;
-  let lastY = 0;
-
-  mapContainer.on("pointerdown", (event) => {
-    if (isPanning) {
-      isMapDragging = true;
-      lastMapX = event.data.global.x;
-      lastMapY = event.data.global.y;
-    }
-  });
-
-  mapContainer.on("pointermove", (event) => {
-    if (isMapDragging && isPanning) {
-      const deltaX = event.data.global.x - lastMapX;
-      const deltaY = event.data.global.y - lastMapY;
-      mapContainer.x += deltaX;
-      mapContainer.y += deltaY;
-      lastMapX = event.data.global.x;
-      lastMapY = event.data.global.y;
-    }
-  });
-  mapContainer.on("mousemove", (event) => {
-    if (isResizing) {
-      console.log(directionx);
-      const deltaSX = event.data.global.x - lastSizeX;
-      const deltaSY = event.data.global.y - lastSizeY;
-      if (Math.abs(deltaSX) > Math.abs(deltaSY)) {
-        resizeTarget.width = resizeTarget.width + deltaSX * 1.2 * directionx;
-        resizeTarget.height = resizeTarget.height + deltaSX * 1.2 * directionx;
-        resizeTarget.width = resizeTarget.width + deltaSY * 1.2 * directiony;
-        resizeTarget.height = resizeTarget.height + deltaSY * 1.2 * directiony;
-      }
-      lastSizeX = event.data.global.x;
-      lastSizeY = event.data.global.y;
-    }
-  });
-
-  mapContainer.on("pointerup", () => {
-    isMapDragging = false;
-  });
-
-  mapContainer.on("pointerupoutside", () => {
-    isMapDragging = false;
-  });
   function createSprite(texture, x, y) {
     const sprite = new PIXI.Sprite(texture);
     // sprite.position.set(x, y);
     sprite.anchor.set(0.5);
-    sprite.interactive = true;
-    sprite.buttonMode = true;
 
     let isDragging = false;
     let dragData = null;
@@ -192,7 +187,7 @@ let main = (async () => {
     outline.interactive = true;
     outline.buttonMode = true;
     outline.width = sprite.width;
-    outline.height = sprite.width;
+    outline.height = sprite.height;
     const rotateHandle = new PIXI.Graphics();
     rotateHandle.interactive = true;
     rotateHandle.buttonMode = true;
@@ -205,81 +200,76 @@ let main = (async () => {
       10
     );
     rotateHandle.endFill();
+    let vars = {
+      0: {
+        x: -outline.width / 2 - 10,
+        y: -outline.height /2 - 10,
+        directionx: -1,
+        directiony: -1
+      },
+      1: {
+        x: outline.width / 2,
+        y: -outline.height / 2 - 10,
+        directionx: 1,
+        directiony: -1
+      },
+      2: {
+        x: -outline.width / 2 - 10,
+        y: outline.height /2,
+        directionx: -1,
+        directiony: 1
+      },
+      3: {
+        x: outline.width / 2,
+        y: outline.height /2,
+        directionx: 1,
+        directiony: 1
+      }
+    }
 
     for (let i = 0; i < 4; i++) {
-      const topLeft = new PIXI.Graphics();
-      topLeft.interactive = true;
-      topLeft.buttonMode = true;
-      topLeft.lineStyle(2, 0x00ffff);
-      topLeft.beginFill(0x00ffff);
-      if (i === 0) {
-        topLeft.drawRect(
-          -outline.width / 2 - 10,
-          -outline.height / 2 - 10,
-          10,
-          10
-        );
-        topLeft.on("mousedown", () => {
-          directionx = -1;
-          directiony = -1;
-        });
-      }
-      if (i === 1) {
-        topLeft.drawRect(
-          outline.width / 2 - 5,
-          -outline.height / 2 - 5,
-          10,
-          10
-        );
-        topLeft.on("mousedown", () => {
-          directionx = 1;
-          directiony = -1;
-        });
-      }
-      if (i === 2) {
-        topLeft.drawRect(-outline.width / 2, outline.height / 2 - 5, 10, 10);
-        topLeft.on("mousedown", () => {
-          directionx = -1;
-          directiony = 1;
-        });
-      }
-      if (i === 3) {
-        topLeft.drawRect(
-          outline.width / 2 - 10,
-          outline.height / 2 - 10,
-          10,
-          10
-        );
-        topLeft.on("mousedown", () => {
-          directionx = 1;
-          directiony = 1;
-        });
-      }
+      const resizeHandle = new PIXI.Graphics();
+      resizeHandle.interactive = true;
+      resizeHandle.buttonMode = true;
+      resizeHandle.lineStyle(2, 0x00ffff);
+      resizeHandle.beginFill(0x00ffff);
+      
+      let { x, y, directionx, directiony } = vars[i];
 
-      topLeft.endFill();
-      topLeft.on("mousedown", (event) => {
+      resizeHandle.drawRect(
+        x,
+        y,
+        10,
+        10
+      );
+      resizeHandle.on("mousedown", () => {
+        state.directionx = directionx;
+        state.directiony = directiony;
+      });
+
+      resizeHandle.endFill();
+      resizeHandle.on("mousedown", (event) => {
         resizeTarget = sprite;
         lastSizeX = event.data.global.x;
         lastSizeY = event.data.global.y;
-        isResizing = true;
+        state.isResizing = true;
         mouseOffsetX = event.global.x;
         mouseOffsetY = event.global.y;
       });
-      topLeft.on("mouseup", (event) => {
-        isResizing = false;
+      resizeHandle.on("mouseup", (event) => {
+        state.isResizing = false;
         console.log("disabled");
       });
-      topLeft.on("mouseupoutside", (event) => {
-        isResizing = false;
+      resizeHandle.on("mouseupoutside", (event) => {
+        state.isResizing = false;
       });
 
-      outline.addChild(topLeft);
+      outline.addChild(resizeHandle);
     }
     outline.addChild(rotateHandle);
     // Rectangle with fill and border
     const spriteCont = new PIXI.Container();
     spriteCont.interactive = true;
-    spriteCont.buttonMode = true;
     spriteCont.x = x;
     spriteCont.y = y;
     // console.log(sprite.texture.width);
@@ -299,10 +289,9 @@ let main = (async () => {
       actualX = spriteCont.x;
       actualY = spriteCont.y;
       isDragging = true;
-      console.log(mapContainer.children);
-      mapContainer.setChildIndex(spriteCont, mapContainer.children.length - 1);
+      state.mapContainer.setChildIndex(spriteCont, state.mapContainer.children.length - 1);
       spriteCont.alpha = 0.5;
-      isMapDragging = false;
+      // isMapDragging = false;
       dragData = event.data;
       lastX = event.data.global.x;
       lastY = event.data.global.y;
@@ -353,7 +342,7 @@ let main = (async () => {
     sprite.on("wheel", (event) => {
       console.log(event);
     });
-    mapContainer.addChild(spriteCont);
+    state.mapContainer.addChild(spriteCont);
   }
 
   const spriteTexture = await PIXI.Assets.load("sample.png");
@@ -363,64 +352,50 @@ let main = (async () => {
   createSprite(spriteTexture, 300, 300);
   createSprite(spriteTexture, 700, 700);
 
-  // Load the texture using PIXI loader
-  const texture = await PIXI.Assets.load("GridONE.png");
-  console.log(await PIXI.Assets.load("GridONE.png"));
-
-  const tileSize = 64;
-  let tiles = [];
-
   // Function to create a tile
-  function createTile(x, y) {
-    const tile = new PIXI.Sprite(texture);
-    tile.anchor.set(0.5);
-    tile.position.set(x, y);
-    gridContainer.addChild(tile);
-    gridContainer.setChildIndex(tile, 0);
-    return tile;
-  }
 
-  app.ticker.add(() => {
+  state.app.ticker.add(() => {
+    let mapContainer = state.mapContainer;
+    let gridContainer = mapContainer.gridContainer;
+
     const cameraX = -mapContainer.x;
     const cameraY = -mapContainer.y;
 
-    const gridX = Math.floor(cameraX / tileSize);
-    const gridY = Math.floor(cameraY / tileSize) + 1;
+    const gridX = Math.floor(cameraX / state.tileSize);
+    const gridY = Math.floor(cameraY / state.tileSize) + 1;
 
-    gridContainer.height = CAMERA.getHeight();
-    gridContainer.width = CAMERA.getWidth();
+    gridContainer.height = state.getHeight();
+    gridContainer.width = state.getWidth();
 
-    tiles.forEach((tile) => {
+    gridContainer.children.forEach((tile) => {
       let tileX = tile.position.x;
       let tileY = tile.position.y;
       if (
-        tileX < cameraX - 2 * tileSize ||
-        tileX > cameraX + CAMERA.getWidth() ||
-        tileY > cameraY + CAMERA.getHeight() ||
-        tileY < cameraY - 2 * tileSize
+        tileX < cameraX - 2 * state.tileSize ||
+        tileX > cameraX + state.getWidth() ||
+        tileY > cameraY + state.getHeight() ||
+        tileY < cameraY - 2 * state.tileSize
       ) {
         gridContainer.removeChild(tile);
-        const index = tiles.indexOf(tile);
-        tiles.splice(index, 1);
         // tile.visible = false;
       }
     });
 
     for (
       let row = gridY - 1;
-      row <= gridY + Math.ceil(CAMERA.getHeight() / tileSize);
+      row <= gridY + Math.ceil(state.getHeight() / state.tileSize);
       row++
     ) {
       for (
         let col = gridX - 1;
-        col <= gridX + Math.ceil(CAMERA.getWidth() / tileSize);
+        col <= gridX + Math.ceil(state.getWidth() / state.tileSize);
         col++
       ) {
         let tileExists = false;
-        for (let tile of tiles) {
+        for (let tile of gridContainer.children) {
           if (
-            tile.position.x === col * tileSize &&
-            tile.position.y === row * tileSize
+            tile.position.x === col * state.tileSize &&
+            tile.position.y === row * state.tileSize
           ) {
             tileExists = true;
             // tile.visible = true;
@@ -428,16 +403,31 @@ let main = (async () => {
           }
         }
         if (!tileExists) {
-          const newTile = createTile(col * tileSize, row * tileSize);
-          tiles.push(newTile);
+          gridContainer.createTile(col * state.tileSize, row * state.tileSize);
         }
       }
     }
   });
 
   window.addEventListener("resize", () => {
-    // app.renderer.resize(window.innerWidth, window.innerHeight);
+    // state.app.renderer.resize(window.innerWidth, window.innerHeight);
   });
-});
+};
 
 main();
+
+
+//////// other doc
+
+function createSprite(texture) {
+}
+
+function createNode() {
+}
+
+function Creature(texture, position) {
+  let spriteContainer = new PIXI.Container()
+  spriteContainer.position = position;
+  let sprite = createSprite(texture)
+  let node = createNode()
+}
