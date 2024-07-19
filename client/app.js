@@ -3,9 +3,14 @@ const URL = "http://localhost:8080";
 const app = Vue.createApp({
   data() {
     return {
-      title: "Function Calling Test",
-      userInput: "",
-      response: null,
+      title1: "Function Calling Test",
+      title2: "Create Monster Test",
+      pageonebool: true,
+      pagetwobool: false,
+      userInput_one: "",
+      userInput_two: "",
+      response_one: null,
+      response_two: null,
     };
   },
   methods: {
@@ -22,29 +27,51 @@ const app = Vue.createApp({
 
       fetch("/api/message-history/user_id_here", { method: "DELETE" });
     },
-    async sendRequest() {
-      if (this.userInput.trim() === "") return;
-
+    async sendRequest_one() {
+      if (this.userInput_one.trim() === "") return;
+      console.log(this.userInput_one);
       try {
-        // fix this
-        const response = await fetch("/api/function-call", {
+        const response = await fetch(`${URL}/api/chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ input: this.userInput }),
+          body: JSON.stringify({ input: this.userInput_one }),
         });
-        this.userInput = "";
+        this.userInput_one = "";
 
         const data = await response.json();
-        console.log(this.response);
-        this.response = data.response;
+        console.log(this.response_one);
+        this.response_one = data.response;
       } catch (error) {
         console.error("Error:", error);
-        this.response = "An error occurred while processing your request.";
+        console.log(this.userInput_one);
+        console.log(this.response_one);
+        this.response_one = "An error occurred while processing your request.";
       }
 
-      this.userInput = "";
+      this.userInput_one = "";
+    },
+
+    async sendRequest_two() {
+      if (this.userInput_two.trim() === "") return;
+      try {
+        const response = await fetch(`${URL}/api/statblock`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ input: this.userInput_two }),
+        });
+        this.userInput_two = "";
+        const data = await response.json();
+        console.log(this.response_two);
+        this.response_two = data.response;
+      } catch (error) {
+        console.error("Error:", error);
+        this.response_two = "An error occurred while processing your request.";
+      }
+      this.userInput_two = "";
     },
   },
   created() {

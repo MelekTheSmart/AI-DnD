@@ -53,9 +53,39 @@ app.delete("/:type/:id", users.delObj);
 app.post("/templates", () => {});
 
 // AI endpoints
-app.post("/api/chat", async (req, res) => {
+
+app.post("/api/chat", express.json(), async (req, res) => {
+  //validate input
+  if (!req.body) {
+    console.log("Invalid input. Message is null.");
+    return res.status(400).json({ error: "Invalid input. Message is null." });
+  }
   try {
-    const { messages } = req.body;
+    console.log(req.body);
+    const { input } = req.body;
+    let messages = [
+      {
+        role: "system",
+        content: "You are a helpful assistant that can use various functions.",
+      },
+      {
+        role: "user",
+        content: input,
+      },
+    ];
+    const response = await AI.mothercaller(messages);
+    res.json({ response });
+  } catch (error) {
+    console.error("Error:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing your request." });
+  }
+});
+
+app.post("/api/statblock", async (req, res) => {
+  try {
+    const { message } = req.body;
 
     // Validate input
     if (!Array.isArray(messages) || messages.length === 0) {
@@ -65,12 +95,10 @@ app.post("/api/chat", async (req, res) => {
     }
 
     // Generate AI response
-    const aiResponse = await AI.generateResponse(messages);
-
-    // Send the AI response back to the client
-    res.json({ response: aiResponse });
+    const response = await AI.generateStatblock(message);
+    res.json({ response });
   } catch (error) {
-    console.error("Error in AI chat:", error);
+    console.error("Error in AI function call:", error);
     res
       .status(500)
       .json({ error: "An error occurred while processing your request." });

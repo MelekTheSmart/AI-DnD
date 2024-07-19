@@ -1,5 +1,7 @@
+const OpenAI = require("openai");
+
 const openai = new OpenAI({
-  apiKey: "Insert API key here",
+  apiKey: "sk-proj-Dc0mYAo9Iyo3Dga6WRg1T3BlbkFJc6QRtlWkBUNYsrcnesZw",
 });
 
 function helloWorld(appendString) {
@@ -738,4 +740,4 @@ async function createStatBlock(userMessage) {
   return chat.choices[0].message.content;
 }
 
-module.exports = { mothercaller };
+module.exports = { mothercaller, createStatBlock };
