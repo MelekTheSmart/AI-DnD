@@ -53,26 +53,25 @@ app.delete("/:type/:id", users.delObj);
 app.post("/templates", () => {});
 
 // AI endpoints
-
 app.post("/api/chat", express.json(), async (req, res) => {
-  //validate input
   if (!req.body) {
     console.log("Invalid input. Message is null.");
     return res.status(400).json({ error: "Invalid input. Message is null." });
   }
+
   try {
-    console.log(req.body);
-    const { input } = req.body;
+    const { input, history } = req.body;
+
+    // Prepare messages array for mothercaller
     let messages = [
       {
         role: "system",
         content: "You are a helpful assistant that can use various functions.",
       },
-      {
-        role: "user",
-        content: input,
-      },
+      ...history, // Include previous messages
+      { role: "user", content: input }, // Add the latest user input
     ];
+
     const response = await AI.mothercaller(messages);
     res.json({ response });
   } catch (error) {

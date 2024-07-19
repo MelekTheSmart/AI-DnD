@@ -11,6 +11,7 @@ const app = Vue.createApp({
       userInput_two: "",
       response_one: null,
       response_two: null,
+      messageHistory: [],
     };
   },
   methods: {
@@ -29,30 +30,43 @@ const app = Vue.createApp({
     },
     async sendRequest_one() {
       if (this.userInput_one.trim() === "") return;
-      console.log(this.userInput_one);
+
+      // Add user message to history
+      this.messageHistory.push({ role: "user", content: this.userInput_one });
+
       try {
         const response = await fetch(`${URL}/api/chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ input: this.userInput_one }),
+          body: JSON.stringify({
+            input: this.userInput_one,
+            history: this.messageHistory,
+          }),
         });
-        this.userInput_one = "";
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
         const data = await response.json();
-        console.log(this.response_one);
         this.response_one = data.response;
+
+        // Add AI response to history
+        this.messageHistory.push({
+          role: "assistant",
+          content: this.response_one,
+        });
+
+        console.log("Updated message history:", this.messageHistory);
       } catch (error) {
         console.error("Error:", error);
-        console.log(this.userInput_one);
-        console.log(this.response_one);
         this.response_one = "An error occurred while processing your request.";
       }
 
       this.userInput_one = "";
     },
-
     async sendRequest_two() {
       if (this.userInput_two.trim() === "") return;
       try {

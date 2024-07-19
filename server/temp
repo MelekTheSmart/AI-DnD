@@ -146,3 +146,5 @@ app.delete("/api/message-history/:userId", async (req, res) => {
       .json({ error: "An error occurred while deleting message history." });
   }
 });
+
+          "You are a helpful assistant that can call a function caller with a given prompt ONLY if the user calls with a '/' to indicate command.",
