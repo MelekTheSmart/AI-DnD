@@ -1,7 +1,7 @@
 const OpenAI = require("openai");
 
 const openai = new OpenAI({
-  apiKey: "sk-proj-Dc0mYAo9Iyo3Dga6WRg1T3BlbkFJc6QRtlWkBUNYsrcnesZw",
+  apiKey: "API key here",
 });
 
 function helloWorld(appendString) {
