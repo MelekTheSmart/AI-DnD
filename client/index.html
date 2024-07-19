@@ -3,17 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+    <title>Vue BoilerPlate with Function Calling</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <title>Vue BoilerPlate</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div id="app">
-      <div id="otherstuff">
-        <h1>{{ titleh1 }}</h1>
+      <button @click="pageonebool = !pageonebool; pagetwobool = !pagetwobool">
+        Page1
+      </button>
+      <button @click="pagetwobool = !pagetwobool; pageonebool = !pageonebool">
+        Page2
+      </button>
+      <div v-if="pageonebool">
+        <h1>{{ title1 }}</h1>
+        <div>
+          <input v-model="userInput_one" placeholder="Enter your request" />
+          <button @click="sendRequest_one">Send</button>
+        </div>
+        <div v-if="response_one">
+          <h2>Response:</h2>
+          <pre>{{ response_one }}</pre>
+        </div>
       </div>
 
-      <div id="calculators"></div>
+      <div v-if="pagetwobool">
+        <h1>{{ title2 }}</h1>
+        <div>
+          <input
+            v-model="userInput_two"
+            placeholder="Enter your statblock request"
+          />
+          <button @click="sendRequest_two">Send</button>
+        </div>
+        <div v-if="response_two">
+          <h2>Response:</h2>
+          <pre>{{ response_two }}</pre>
+        </div>
+      </div>
     </div>
     <script src="app.js"></script>
   </body>
