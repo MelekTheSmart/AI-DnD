@@ -20,6 +20,7 @@
   mapContainer.sortableChildren = true;
   let isPanning = false;
   let isResizing;
+  const tileSize = 128;
 
   GameMap.addEventListener("drop", dropHandler);
   GameMap.addEventListener("dragover", dragOverHandler);
@@ -90,10 +91,13 @@
   let isMapDragging = false;
   let isDragging = false;
   let resizeTarget = null;
+  let rotateTarget;
+  let dragTarget;
   let lastMapX = 0;
   let lastMapY = 0;
   let lastX = 0;
   let lastY = 0;
+  let selectedSprite;
 
   mapContainer.on("pointerdown", (event) => {
     if (isPanning) {
@@ -101,6 +105,7 @@
       lastMapX = event.data.global.x;
       lastMapY = event.data.global.y;
     }
+    selectedSprite.checkSpriteBorder(event);
   });
 
   mapContainer.on("pointermove", (event) => {
@@ -121,16 +126,54 @@
       if (Math.abs(deltaSX) > Math.abs(deltaSY)) {
         resizeTarget.width = resizeTarget.width + deltaSX * 1.2 * directionx;
         resizeTarget.height = resizeTarget.height + deltaSX * 1.2 * directionx;
+      }
+      if (Math.abs(deltaSX) < Math.abs(deltaSY)) {
         resizeTarget.width = resizeTarget.width + deltaSY * 1.2 * directiony;
         resizeTarget.height = resizeTarget.height + deltaSY * 1.2 * directiony;
       }
       lastSizeX = event.data.global.x;
       lastSizeY = event.data.global.y;
     }
+    if (dragTarget) {
+      didMove = true;
+      const deltaSX = event.data.global.x - lastX;
+      const deltaSY = event.data.global.y - lastY;
+      dragTarget.x = dragTarget.x + deltaSX;
+      dragTarget.y = dragTarget.y + deltaSY;
+      actualX = actualX + deltaSX;
+      actualY = actualY + deltaSY;
+      dragTarget.x = tileSize * Math.round(actualX / tileSize);
+      dragTarget.y = tileSize * Math.round(actualY / tileSize);
+      lastX = event.data.global.x;
+      lastY = event.data.global.y;
+    }
+    if (rotateTarget) {
+      rotateTarget.rotation =
+        Math.atan2(
+          event.global.y - rotateTarget.getGlobalPosition().y,
+          event.global.x - rotateTarget.getGlobalPosition().x
+        ) +
+        Math.PI / 2;
+    }
   });
 
-  mapContainer.on("pointerup", () => {
+  mapContainer.on("pointerup", (event) => {
     isMapDragging = false;
+    if (dragTarget) {
+      dragTarget.x = tileSize * Math.round(dragTarget.x / tileSize);
+      dragTarget.y = tileSize * Math.round(dragTarget.y / tileSize);
+      didMove = false;
+      dragTarget.alpha = 1;
+      isDragging = false;
+      dragTarget = null;
+      dragData = null;
+    }
+    if (rotateTarget) {
+      rotateTarget = null;
+    }
+    if (isResizing) {
+      isResizing = false;
+    }
   });
 
   mapContainer.on("pointerupoutside", () => {
@@ -154,23 +197,25 @@
       sprite.width,
       sprite.height
     ); // x, y, width, height\
-    // outline.visible = false;
+    outline.visible = false;
     outline.interactive = true;
     outline.buttonMode = true;
     outline.width = sprite.width;
-    outline.height = sprite.width;
+    outline.height = sprite.height;
     const rotateHandle = new PIXI.Graphics();
     rotateHandle.interactive = true;
     rotateHandle.buttonMode = true;
     rotateHandle.lineStyle(2, 0x00ffff);
     rotateHandle.beginFill(0x00ffff);
-    rotateHandle.drawCircle(
-      -outline.width / 4 + 100,
-      -outline.height / 2 - 10,
-      10,
-      10
-    );
+    rotateHandle.drawCircle(0, -outline.height / 2 - 10, 10, 10);
     rotateHandle.endFill();
+    rotateHandle.on("mousedown", (event) => {
+      rotateTarget = sprite;
+      lastSizeX = event.data.global.x;
+      lastSizeY = event.data.global.y;
+      mouseOffsetX = event.global.x;
+      mouseOffsetY = event.global.y;
+    });
 
     for (let i = 0; i < 4; i++) {
       const topLeft = new PIXI.Graphics();
@@ -243,6 +288,18 @@
     }
     outline.addChild(rotateHandle);
     // Rectangle with fill and border
+    sprite.checkSpriteBorder = function (event) {
+      if (selectedSprite) {
+        const isClickedOutside = !sprite
+          .getBounds()
+          .contains(event.clientX, event.clientY);
+        if (isClickedOutside) {
+          selectedSprite = null;
+          outline.visible = false;
+        }
+      }
+      console.log("click");
+    };
     const spriteCont = new PIXI.Container();
     spriteCont.interactive = true;
     spriteCont.buttonMode = true;
@@ -255,62 +312,53 @@
     outline_rect.drawRect(0, 0, spriteCont.width, spriteCont.height); // x, y, width, height
     spriteCont.addChild(outline_rect);
     const node = new PIXI.Graphics();
-    node.lineStyle(2, 0x00ff00); // Green border, 2px thick
-    node.drawCircle(0, 0, 32, 32); // x, y, width, height
-    node.hitArea = new PIXI.Circle(0, 0, 32, 32);
-    node.visible = true;
+    node.lineStyle(4, 0x00ff00); // Green border, 2px thick
+    node.drawCircle(0, 0, tileSize / 2, tileSize / 2); // x, y, width, height
+    node.hitArea = new PIXI.Circle(0, 0, tileSize / 2, tileSize / 2);
+    node.visible = false;
     node.interactive = true;
     node.buttonMode = true;
     node.on("mousedown", (event) => {
-      actualX = spriteCont.x;
-      actualY = spriteCont.y;
-      isDragging = true;
-      console.log(mapContainer.children);
-      mapContainer.setChildIndex(spriteCont, mapContainer.children.length - 1);
-      spriteCont.alpha = 0.5;
-      isMapDragging = false;
-      dragData = event.data;
-      lastX = event.data.global.x;
-      lastY = event.data.global.y;
+      if (selectedSprite) {
+        dragTarget = spriteCont;
+        actualX = spriteCont.x;
+        actualY = spriteCont.y;
+        isDragging = true;
+        console.log(mapContainer.children);
+        mapContainer.setChildIndex(
+          spriteCont,
+          mapContainer.children.length - 1
+        );
+        spriteCont.alpha = 0.5;
+        isMapDragging = false;
+        dragData = event.data;
+        lastX = event.data.global.x;
+        lastY = event.data.global.y;
+      }
+    });
+    node.on("pointerdown", () => {
+      if (!selectedSprite) {
+        selectedSprite = sprite;
+        outline.visible = true;
+      }
     });
     spriteCont.addChild(sprite);
     spriteCont.addChild(node);
     sprite.addChild(outline);
 
-    spriteCont.on("rightclick", (event) => {
+    spriteCont.on("rightclick", () => {
       console.log(spriteCont);
     });
-    spriteCont.on("pointerover", (event) => {
+    spriteCont.on("pointerover", () => {
       node.visible = true;
     });
-    spriteCont.on("pointerout", (event) => {
+    spriteCont.on("pointerout", () => {
       node.visible = false;
     });
 
-    spriteCont.on("pointermove", (event) => {
-      if (isDragging) {
-        const deltaSX = event.data.global.x - lastX;
-        const deltaSY = event.data.global.y - lastY;
-        spriteCont.x = spriteCont.x + deltaSX;
-        spriteCont.y = spriteCont.y + deltaSY;
-        actualX = actualX + deltaSX;
-        actualY = actualY + deltaSY;
-        spriteCont.x = 64 * Math.round(actualX / 64);
-        spriteCont.y = 64 * Math.round(actualY / 64);
-        lastX = event.data.global.x;
-        lastY = event.data.global.y;
-      }
-    });
+    spriteCont.on("pointermove", () => {});
 
-    spriteCont.on("pointerup", () => {
-      if (isDragging) {
-        spriteCont.x = 64 * Math.round(spriteCont.x / 64);
-        spriteCont.y = 64 * Math.round(spriteCont.y / 64);
-        spriteCont.alpha = 1;
-        isDragging = false;
-        dragData = null;
-      }
-    });
+    spriteCont.on("pointerup", () => {});
 
     sprite.on("pointerupoutside", () => {
       isDragging = false;
@@ -333,16 +381,23 @@
   const texture = await PIXI.Assets.load("GridONE.png");
   console.log(await PIXI.Assets.load("GridONE.png"));
 
-  const tileSize = 64;
   const viewportWidth = app.screen.width;
   const viewportHeight = app.screen.height;
   let tiles = [];
 
   // Function to create a tile
   function createTile(x, y) {
+    // const tile = new PIXI.Rectangle(x, y, tileSize, tileSize);
+
+    // tile.beginFill(0xffffff);
+    // tile.lineStyle(4, 0x000000); // Green border, 2px thick
+    // tile.drawRect(x, y, tileSize, tileSize); // x, y, width, height
+    // tile.endFill();
     const tile = new PIXI.Sprite(texture);
     tile.anchor.set(0.5);
     tile.position.set(x, y);
+    tile.width = tileSize;
+    tile.height = tileSize;
     gridContainer.addChild(tile);
     gridContainer.setChildIndex(tile, 0);
     return tile;
@@ -388,7 +443,6 @@
             tile.position.y === row * tileSize
           ) {
             tileExists = true;
-            // tile.visible = true;
             break;
           }
         }
