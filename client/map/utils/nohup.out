@@ -1,0 +1,128 @@
+127.0.0.1 - - [22/Jul/2024 00:04:47] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 00:04:47] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:04:52] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 00:04:52] "GET /creature.js HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 00:05:39] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 00:05:39] "GET /creature.js HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 00:05:40] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:05:40] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:05:40] code 404, message File not found
+127.0.0.1 - - [22/Jul/2024 00:05:40] "GET /favicon.png HTTP/1.1" 404 -
+127.0.0.1 - - [22/Jul/2024 00:05:41] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:05:41] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:05:41] code 404, message File not found
+127.0.0.1 - - [22/Jul/2024 00:05:41] "GET /favicon.png HTTP/1.1" 404 -
+127.0.0.1 - - [22/Jul/2024 00:07:13] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 00:07:13] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:07:31] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:07:31] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:09:31] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 00:09:32] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:09:54] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 00:09:54] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:11:05] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:11:05] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:11:23] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 00:11:23] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:11:47] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:11:47] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:12:19] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:12:19] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:15:41] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 00:15:41] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:16:27] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:16:27] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:16:42] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:16:42] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:17:04] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 00:17:04] "GET /creature.js HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('162.142.125.192', 37014)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+162.142.125.192 - - [22/Jul/2024 00:37:01] "GET / HTTP/1.1" 200 -
+162.142.125.192 - - [22/Jul/2024 00:37:05] "GET / HTTP/1.1" 200 -
+162.142.125.192 - - [22/Jul/2024 00:37:05] code 404, message File not found
+162.142.125.192 - - [22/Jul/2024 00:37:05] "GET /favicon.ico HTTP/1.1" 404 -
+162.142.125.192 - - [22/Jul/2024 00:37:06] code 505, message Invalid HTTP version (2.0)
+162.142.125.192 - - [22/Jul/2024 00:37:06] "PRI * HTTP/2.0" 505 -
+121.12.147.251 - - [22/Jul/2024 00:57:00] "GET / HTTP/1.1" 200 -
+64.62.197.13 - - [22/Jul/2024 02:14:12] "GET / HTTP/1.1" 200 -
+64.62.197.5 - - [22/Jul/2024 02:14:28] code 404, message File not found
+64.62.197.5 - - [22/Jul/2024 02:14:28] "GET /favicon.ico HTTP/1.1" 404 -
+64.62.197.6 - - [22/Jul/2024 02:14:32] code 404, message File not found
+64.62.197.6 - - [22/Jul/2024 02:14:32] "GET http://api.ipify.org/?format=json HTTP/1.1" 404 -
+64.62.197.10 - - [22/Jul/2024 02:14:35] code 501, message Unsupported method ('CONNECT')
+64.62.197.10 - - [22/Jul/2024 02:14:35] "CONNECT www.shadowserver.org:443 HTTP/1.1" 501 -
+148.153.45.234 - - [22/Jul/2024 04:11:29] code 404, message File not found
+148.153.45.234 - - [22/Jul/2024 04:11:29] "GET /oQOM HTTP/1.1" 404 -
+148.153.45.234 - - [22/Jul/2024 04:11:29] code 404, message File not found
+148.153.45.234 - - [22/Jul/2024 04:11:29] "GET /PXaT HTTP/1.1" 404 -
+148.153.45.234 - - [22/Jul/2024 04:11:29] code 404, message File not found
+148.153.45.234 - - [22/Jul/2024 04:11:29] "GET /aab8 HTTP/1.1" 404 -
+148.153.45.234 - - [22/Jul/2024 04:11:29] code 404, message File not found
+148.153.45.234 - - [22/Jul/2024 04:11:29] "GET /jquery-3.3.1.slim.min.js HTTP/1.1" 404 -
+148.153.45.234 - - [22/Jul/2024 04:11:29] code 404, message File not found
+148.153.45.234 - - [22/Jul/2024 04:11:29] "GET /aab9 HTTP/1.1" 404 -
+148.153.45.234 - - [22/Jul/2024 04:11:29] code 404, message File not found
+148.153.45.234 - - [22/Jul/2024 04:11:29] "GET /jquery-3.3.2.slim.min.js HTTP/1.1" 404 -
+20.118.69.82 - - [22/Jul/2024 04:43:31] code 400, message Bad request version ('À\\x14À')
+20.118.69.82 - - [22/Jul/2024 04:43:31] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03aÚ \x06Ði#¢F\x19\x03ÝY©A¤D\x97÷\x9d°\x8cAô\x90\x96\x13\x82Î\x82Ýq\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+87.236.176.21 - - [22/Jul/2024 06:47:11] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:27:32] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 07:27:32] "GET /creature.js HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 07:28:14] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 07:28:34] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 07:29:11] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:29:14] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:29:14] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:29:14] code 404, message File not found
+127.0.0.1 - - [22/Jul/2024 07:29:14] "GET /favicon.png HTTP/1.1" 404 -
+127.0.0.1 - - [22/Jul/2024 07:29:34] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 07:29:34] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:29:43] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:29:43] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:30:07] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:30:07] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:30:34] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:30:34] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:30:54] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:30:54] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:31:53] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:31:53] "GET /creature.js HTTP/1.1" 200 -
+45.156.129.46 - - [22/Jul/2024 07:32:45] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:32:48] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 07:32:48] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:34:24] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 07:34:24] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:34:56] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:34:56] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:37:37] "GET /test.html HTTP/1.1" 304 -
+127.0.0.1 - - [22/Jul/2024 07:37:37] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:37:37] code 404, message File not found
+127.0.0.1 - - [22/Jul/2024 07:37:37] "GET /favicon.png HTTP/1.1" 404 -
+127.0.0.1 - - [22/Jul/2024 07:38:41] "GET /test.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:38:41] "GET /creature.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2024 07:38:41] code 404, message File not found
+127.0.0.1 - - [22/Jul/2024 07:38:41] "GET /favicon.png HTTP/1.1" 404 -
+8.222.166.37 - - [22/Jul/2024 08:32:32] code 404, message File not found
+8.222.166.37 - - [22/Jul/2024 08:32:32] "GET /.env HTTP/1.1" 404 -
+182.43.245.69 - - [22/Jul/2024 10:11:19] code 404, message File not found
+182.43.245.69 - - [22/Jul/2024 10:11:19] "GET /.env HTTP/1.1" 404 -

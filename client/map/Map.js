@@ -12,6 +12,8 @@ function initApp() {
     height: state.getHeight(),
     backgroundColor: 0x1099bb,
   });
+  
+  // I would like to initialize all the variables 'state' needs in one function rather than spreading them out here.
 
   state.app = app
 
@@ -184,8 +186,6 @@ async function main() {
       sprite.height
     ); // x, y, width, height\
     // outline.visible = false;
-    outline.interactive = true;
-    outline.buttonMode = true;
     outline.width = sprite.width;
     outline.height = sprite.height;
     const rotateHandle = new PIXI.Graphics();
@@ -272,7 +272,6 @@ async function main() {
     spriteCont.interactive = true;
     spriteCont.x = x;
     spriteCont.y = y;
-    // console.log(sprite.texture.width);
     console.log(spriteCont.width);
     const outline_rect = new PIXI.Graphics();
     outline_rect.lineStyle(2, 0x00ff00); // Green border, 2px thick
@@ -416,18 +415,3 @@ async function main() {
 
 main();
 
-
-//////// other doc
-
-function createSprite(texture) {
-}
-
-function createNode() {
-}
-
-function Creature(texture, position) {
-  let spriteContainer = new PIXI.Container()
-  spriteContainer.position = position;
-  let sprite = createSprite(texture)
-  let node = createNode()
-}

@@ -1,0 +1,312 @@
+node:internal/modules/cjs/loader:1137
+  throw err;
+  ^
+
+Error: Cannot find module 'openai'
+Require stack:
+- /home/andrew/Documents/AI-DnD/server/utils/ai.js
+- /home/andrew/Documents/AI-DnD/server/index.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1134:15)
+    at Module._load (node:internal/modules/cjs/loader:975:27)
+    at Module.require (node:internal/modules/cjs/loader:1225:19)
+    at require (node:internal/modules/helpers:177:18)
+    at Object.<anonymous> (/home/andrew/Documents/AI-DnD/server/utils/ai.js:1:16)
+    at Module._compile (node:internal/modules/cjs/loader:1356:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+    at Module.load (node:internal/modules/cjs/loader:1197:32)
+    at Module._load (node:internal/modules/cjs/loader:1013:12)
+    at Module.require (node:internal/modules/cjs/loader:1225:19) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/andrew/Documents/AI-DnD/server/utils/ai.js',
+    '/home/andrew/Documents/AI-DnD/server/index.js'
+  ]
+}
+
+Node.js v18.19.1
+node:internal/modules/cjs/loader:1137
+  throw err;
+  ^
+
+Error: Cannot find module 'openai'
+Require stack:
+- /home/andrew/Documents/AI-DnD/server/utils/ai.js
+- /home/andrew/Documents/AI-DnD/server/index.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1134:15)
+    at Module._load (node:internal/modules/cjs/loader:975:27)
+    at Module.require (node:internal/modules/cjs/loader:1225:19)
+    at require (node:internal/modules/helpers:177:18)
+    at Object.<anonymous> (/home/andrew/Documents/AI-DnD/server/utils/ai.js:1:16)
+    at Module._compile (node:internal/modules/cjs/loader:1356:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+    at Module.load (node:internal/modules/cjs/loader:1197:32)
+    at Module._load (node:internal/modules/cjs/loader:1013:12)
+    at Module.require (node:internal/modules/cjs/loader:1225:19) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/andrew/Documents/AI-DnD/server/utils/ai.js',
+    '/home/andrew/Documents/AI-DnD/server/index.js'
+  ]
+}
+
+Node.js v18.19.1
+server is running on http://localhost:8080...
+/home/andrew/Documents/AI-DnD/server/node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:219
+    throw new MongooseError('The `uri` parameter to `openUri()` must be a ' +
+          ^
+
+MongooseError: The `uri` parameter to `openUri()` must be a string, got "undefined". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.
+    at NativeConnection.createClient (/home/andrew/Documents/AI-DnD/server/node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:219:11)
+    at NativeConnection.openUri (/home/andrew/Documents/AI-DnD/server/node_modules/mongoose/lib/connection.js:823:34)
+    at Mongoose.connect (/home/andrew/Documents/AI-DnD/server/node_modules/mongoose/lib/mongoose.js:448:15)
+    at Object.<anonymous> (/home/andrew/Documents/AI-DnD/server/resource/model.js:12:10)
+    at Module._compile (node:internal/modules/cjs/loader:1356:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+    at Module.load (node:internal/modules/cjs/loader:1197:32)
+    at Module._load (node:internal/modules/cjs/loader:1013:12)
+    at Module.require (node:internal/modules/cjs/loader:1225:19)
+    at require (node:internal/modules/helpers:177:18)
+
+Node.js v18.19.1
+127.0.0.1 - - [20/Jul/2024 12:52:59] "GET /Map.html HTTP/1.1" 304 -
+127.0.0.1 - - [20/Jul/2024 12:52:59] "GET /Map.js HTTP/1.1" 304 -
+127.0.0.1 - - [20/Jul/2024 12:53:02] "GET /Map.html HTTP/1.1" 304 -
+----------------------------------------
+Exception occurred during processing of request from ('164.52.25.204', 59675)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+164.52.25.204 - - [20/Jul/2024 17:24:10] code 400, message Bad request version ("\\x03sAÙt¼Ô\\x97\\x07¹\\x9aÍ»î\\x15ÿê3\\x99f«\\x07¹\\x02\\x00>\\x13\\x02\\x13\\x03\\x13\\x01À,À0\\x00\\x9fÌ©Ì¨ÌªÀ+À/\\x00\\x9eÀ$À(\\x00kÀ#À'\\x00gÀ")
+164.52.25.204 - - [20/Jul/2024 17:24:10] "\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x03þå\x8b4)\x1fQôùvv\x9bs\x11o¤\x80ß=t\x90\x9dHvÆ¦á5" Íá 5½Õj\x1d¼²\x1c\x03sAÙt¼Ô\x97\x07¹\x9aÍ»î\x15ÿê3\x99f«\x07¹\x02\x00>\x13\x02\x13\x03\x13\x01À,À0\x00\x9fÌ©Ì¨ÌªÀ+À/\x00\x9eÀ$À(\x00kÀ#À'\x00gÀ" 400 -
+----------------------------------------
+Exception occurred during processing of request from ('164.52.25.204', 33353)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+164.52.25.204 - - [20/Jul/2024 17:24:14] code 400, message Bad request version ("Á<ü\\x98\\x9b4«({c¬V\\x7f^\\x94ß\\x00>\\x13\\x02\\x13\\x03\\x13\\x01À,À0\\x00\\x9fÌ©Ì¨ÌªÀ+À/\\x00\\x9eÀ$À(\\x00kÀ#À'\\x00gÀ")
+164.52.25.204 - - [20/Jul/2024 17:24:14] "\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x03© ~Åaü^\x91\x02\x0cÅì%kFµ F0ÙÁõÜÐÙYÜßý\x82@ö \x86¬\x85\x9a¯w \x145\x1a°Ê\x0d\x92,\x1dÁ<ü\x98\x9b4«({c¬V\x7f^\x94ß\x00>\x13\x02\x13\x03\x13\x01À,À0\x00\x9fÌ©Ì¨ÌªÀ+À/\x00\x9eÀ$À(\x00kÀ#À'\x00gÀ" 400 -
+164.52.25.204 - - [20/Jul/2024 17:24:14] "GET / HTTP/1.1" 200 -
+117.33.175.84 - - [20/Jul/2024 18:44:12] code 404, message File not found
+117.33.175.84 - - [20/Jul/2024 18:44:12] "GET /.env HTTP/1.1" 404 -
+127.0.0.1 - - [20/Jul/2024 18:52:37] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [20/Jul/2024 18:52:39] "GET /Map.html HTTP/1.1" 304 -
+127.0.0.1 - - [20/Jul/2024 18:52:39] "GET /app.css HTTP/1.1" 304 -
+127.0.0.1 - - [20/Jul/2024 18:52:39] "GET /Map.js HTTP/1.1" 200 -
+127.0.0.1 - - [20/Jul/2024 18:52:39] "GET /utils/gameManager.js HTTP/1.1" 304 -
+127.0.0.1 - - [20/Jul/2024 18:52:39] "GET /GridONE.png HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 41428)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/usr/lib/python3.12/http/server.py", line 679, in do_GET
+    self.copyfile(f, self.wfile)
+  File "/usr/lib/python3.12/http/server.py", line 878, in copyfile
+    shutil.copyfileobj(source, outputfile)
+  File "/usr/lib/python3.12/shutil.py", line 204, in copyfileobj
+    fdst_write(buf)
+  File "/usr/lib/python3.12/socketserver.py", line 840, in write
+    self._sock.sendall(b)
+BrokenPipeError: [Errno 32] Broken pipe
+----------------------------------------
+127.0.0.1 - - [20/Jul/2024 18:52:39] "GET /sample.png HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 41438)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/usr/lib/python3.12/http/server.py", line 679, in do_GET
+    self.copyfile(f, self.wfile)
+  File "/usr/lib/python3.12/http/server.py", line 878, in copyfile
+    shutil.copyfileobj(source, outputfile)
+  File "/usr/lib/python3.12/shutil.py", line 204, in copyfileobj
+    fdst_write(buf)
+  File "/usr/lib/python3.12/socketserver.py", line 840, in write
+    self._sock.sendall(b)
+BrokenPipeError: [Errno 32] Broken pipe
+----------------------------------------
+127.0.0.1 - - [20/Jul/2024 18:53:02] "GET /Map.html HTTP/1.1" 304 -
+127.0.0.1 - - [20/Jul/2024 18:53:02] "GET /Map.js HTTP/1.1" 200 -
+127.0.0.1 - - [20/Jul/2024 18:53:21] "GET /Map.html HTTP/1.1" 304 -
+127.0.0.1 - - [20/Jul/2024 18:53:21] "GET /Map.js HTTP/1.1" 304 -
+184.105.139.93 - - [20/Jul/2024 20:10:51] "GET / HTTP/1.1" 200 -
+184.105.139.97 - - [20/Jul/2024 20:11:32] code 404, message File not found
+184.105.139.97 - - [20/Jul/2024 20:11:32] "GET /favicon.ico HTTP/1.1" 404 -
+184.105.139.105 - - [20/Jul/2024 20:11:56] code 404, message File not found
+184.105.139.105 - - [20/Jul/2024 20:11:56] "GET http://api.ipify.org/?format=json HTTP/1.1" 404 -
+184.105.139.105 - - [20/Jul/2024 20:12:18] code 501, message Unsupported method ('CONNECT')
+184.105.139.105 - - [20/Jul/2024 20:12:18] "CONNECT www.shadowserver.org:443 HTTP/1.1" 501 -
+185.191.126.213 - - [20/Jul/2024 20:45:44] "GET / HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('167.94.145.105', 56156)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+167.94.145.105 - - [20/Jul/2024 22:46:22] "GET / HTTP/1.1" 200 -
+167.94.145.105 - - [20/Jul/2024 22:46:26] "GET / HTTP/1.1" 200 -
+167.94.145.105 - - [20/Jul/2024 22:46:26] code 404, message File not found
+167.94.145.105 - - [20/Jul/2024 22:46:26] "GET /favicon.ico HTTP/1.1" 404 -
+167.94.145.105 - - [20/Jul/2024 22:46:27] code 505, message Invalid HTTP version (2.0)
+167.94.145.105 - - [20/Jul/2024 22:46:27] "PRI * HTTP/2.0" 505 -
+154.212.141.158 - - [20/Jul/2024 22:52:53] "GET / HTTP/1.1" 200 -
+118.26.39.17 - - [20/Jul/2024 22:53:29] "GET / HTTP/1.1" 200 -
+118.26.39.17 - - [20/Jul/2024 22:53:29] code 404, message File not found
+118.26.39.17 - - [20/Jul/2024 22:53:29] "GET /favicon.ico HTTP/1.1" 404 -
+193.105.134.40 - - [21/Jul/2024 00:21:54] "GET / HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:21:57] "GET /app.css HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:21:59] "GET /GridONE.png HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:00] "GET /GridPNG.png HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:03] "GET /Map.html HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:04] "GET /Map.js HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:08] "GET /nohup.out HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:26] "GET /nohup.out HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:38] "GET /nohup.out HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:40] "GET /package-lock.json HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:43] "GET /package.json HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:44] "GET /sample.png HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:47] "GET /utils/ HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:48] "GET /utils/creature.js HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 00:22:52] "GET /utils/gameManager.js HTTP/1.1" 200 -
+20.118.71.68 - - [21/Jul/2024 02:36:08] code 400, message Bad request version ('À\\x14À')
+20.118.71.68 - - [21/Jul/2024 02:36:08] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x0dHó\x9bJè\x96\x86\x1dxàå\x0e\x98\x14Ï\x0fÖ\x19¿sÛ\x0f(·ÞÞï\x17ÜZ\x89\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+165.154.164.57 - - [21/Jul/2024 04:42:50] code 400, message Bad request version ('\\x00\\x9eÌ¨Ìª\\x003\\x00=\\x00\\x16À')
+165.154.164.57 - - [21/Jul/2024 04:42:50] "\x16\x03\x01\x01\x17\x01\x00\x01\x13\x03\x03\x10T/%\x8b¸RìèXÝ\x10vQÓS'\x94\x10\x8a\x1c\x05+gà\x12*sï4<3 \x8cW\x7fïÊQÂV¨â4þ\x7fEÂá±,W¨éäWg¯¥\x91 Y\x9e\x15\x83\x004Ì¨Ì©À/À0À+À,À\x09\x00\x9eÌ¨Ìª\x003\x00=\x00\x16À" 400 -
+165.154.164.57 - - [21/Jul/2024 04:43:01] "GET / HTTP/1.1" 200 -
+165.154.164.57 - - [21/Jul/2024 04:43:01] code 404, message File not found
+165.154.164.57 - - [21/Jul/2024 04:43:01] "GET /favicon.ico HTTP/1.1" 404 -
+165.154.164.57 - - [21/Jul/2024 04:43:02] code 404, message File not found
+165.154.164.57 - - [21/Jul/2024 04:43:02] "GET /robots.txt HTTP/1.1" 404 -
+165.154.164.57 - - [21/Jul/2024 04:43:02] code 404, message File not found
+165.154.164.57 - - [21/Jul/2024 04:43:02] "GET /sitemap.xml HTTP/1.1" 404 -
+165.154.164.57 - - [21/Jul/2024 04:43:02] "GET /package.json HTTP/1.1" 200 -
+165.154.164.57 - - [21/Jul/2024 04:43:02] "GET /Map.js HTTP/1.1" 200 -
+165.154.164.57 - - [21/Jul/2024 04:43:02] "GET /package-lock.json HTTP/1.1" 200 -
+165.154.164.57 - - [21/Jul/2024 04:43:03] code 404, message File not found
+165.154.164.57 - - [21/Jul/2024 04:43:03] "GET /config.json HTTP/1.1" 404 -
+165.154.164.57 - - [21/Jul/2024 04:43:03] "GET / HTTP/1.1" 200 -
+165.154.164.57 - - [21/Jul/2024 04:43:03] "GET /utils/ HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('167.94.145.99', 34136)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+167.94.145.99 - - [21/Jul/2024 06:19:44] "GET / HTTP/1.1" 200 -
+167.94.145.99 - - [21/Jul/2024 06:19:48] "GET / HTTP/1.1" 200 -
+167.94.145.99 - - [21/Jul/2024 06:19:48] code 404, message File not found
+167.94.145.99 - - [21/Jul/2024 06:19:48] "GET /favicon.ico HTTP/1.1" 404 -
+167.94.145.99 - - [21/Jul/2024 06:19:50] code 505, message Invalid HTTP version (2.0)
+167.94.145.99 - - [21/Jul/2024 06:19:50] "PRI * HTTP/2.0" 505 -
+162.216.149.161 - - [21/Jul/2024 09:16:00] code 400, message Bad request version ('À\\x13À')
+162.216.149.161 - - [21/Jul/2024 09:16:00] "\x16\x03\x01\x00î\x01\x00\x00ê\x03\x03À\x05§Ûò\x17\x15åS=\x9b\x9fF\x13skæj\x00áâ/\x07q \x89íjûó7' Â¨>¯\x06©\x89æcn»\x9b\x18õl\x91\x98lyüupk\x92¿\x89*,1c¹=\x00&À+À/À,À0Ì©Ì¨À\x09À\x13À" 400 -
+162.216.149.161 - - [21/Jul/2024 09:16:00] code 400, message Bad request version ('À(À$À\\x14À')
+162.216.149.161 - - [21/Jul/2024 09:16:00] "\x16\x03\x01\x00Ê\x01\x00\x00Æ\x03\x03\x9a\x08Á\x0e\x93@þ ¯9wð\x839³n;\x10{9êËgA\x02Kê}¨úÈ#\x00\x00hÌ\x14Ì\x13À/À+À0À,À\x11À\x07À'À#À\x13À\x09À(À$À\x14À" 400 -
+125.38.24.99 - - [21/Jul/2024 11:13:43] code 404, message File not found
+125.38.24.99 - - [21/Jul/2024 11:13:43] "GET /.env HTTP/1.1" 404 -
+40.160.12.147 - - [21/Jul/2024 13:32:01] "GET / HTTP/1.1" 200 -
+51.255.109.173 - - [21/Jul/2024 15:52:44] "GET / HTTP/1.1" 200 -
+147.185.132.153 - - [21/Jul/2024 16:40:26] "GET / HTTP/1.1" 200 -
+48.216.196.145 - - [21/Jul/2024 16:58:19] code 400, message Bad request syntax ('MGLNDD_74.211.78.89_8000')
+48.216.196.145 - - [21/Jul/2024 16:58:19] "MGLNDD_74.211.78.89_8000" 400 -
+45.128.232.159 - - [21/Jul/2024 17:50:29] code 400, message Bad request syntax ('JDWP-Handshake')
+45.128.232.159 - - [21/Jul/2024 17:50:29] "JDWP-Handshake" 400 -
+193.105.134.40 - - [21/Jul/2024 18:53:43] "GET / HTTP/1.1" 200 -
+193.105.134.40 - - [21/Jul/2024 18:53:44] "GET /utils/ HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jul/2024 19:34:12] "GET /Map.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jul/2024 19:34:12] "GET /app.css HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jul/2024 19:34:12] "GET /utils/gameManager.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jul/2024 19:34:12] "GET /Map.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jul/2024 19:34:12] "GET /GridONE.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Jul/2024 19:34:12] "GET /sample.png HTTP/1.1" 200 -
+170.64.238.1 - - [21/Jul/2024 23:18:18] code 400, message Bad request version ('À\\x14À')
+170.64.238.1 - - [21/Jul/2024 23:18:18] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03Â\x1d\x97itnmF\x02'Ã¤·S\x7fïCtçû\x18\x1cc0q\x12uNVbÂ5\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+170.64.238.1 - - [21/Jul/2024 23:18:18] code 400, message Bad HTTP/0.9 request type ('\\x16\\x03\\x01\\x00{\\x01\\x00\\x00w\\x03\\x03\\x15u´O\\x8a\\x9cc;Ázs¿W¿%\\x82öu;¦¯\\x86ü¤ÙVèd|\\x0f}\\x13\\x00\\x00\\x1aÀ/À+À\\x11À\\x07À\\x13À')
+170.64.238.1 - - [21/Jul/2024 23:18:18] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x15u´O\x8a\x9cc;Ázs¿W¿%\x82öu;¦¯\x86ü¤ÙVèd|\x0f}\x13\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+170.64.238.1 - - [21/Jul/2024 23:18:19] "GET / HTTP/1.1" 200 -
+170.64.238.1 - - [21/Jul/2024 23:18:19] code 400, message Bad HTTP/0.9 request type ('\\x16\\x03\\x01\\x00{\\x01\\x00\\x00w\\x03\\x03\\x1a[u\\xad\\x99\\x03\\x19K(ùëfï\\x95\\x05\\x0f=>V\\x99ïüO=PF6>Ó\\x8ak\\x82\\x00\\x00\\x1aÀ/À+À\\x11À\\x07À\\x13À')
+170.64.238.1 - - [21/Jul/2024 23:18:19] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x1a[u­\x99\x03\x19K(ùëfï\x95\x05\x0f=>V\x99ïüO=PF6>Ó\x8ak\x82\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+170.64.238.1 - - [21/Jul/2024 23:18:19] code 404, message File not found
+170.64.238.1 - - [21/Jul/2024 23:18:19] "GET /login HTTP/1.1" 404 -
