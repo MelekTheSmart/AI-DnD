@@ -81,20 +81,16 @@ app.post("/api/chat", express.json(), async (req, res) => {
       .json({ error: "An error occurred while processing your request." });
   }
 });
-
-app.post("/api/statblock", async (req, res) => {
+app.post("/api/statblock", express.json(), async (req, res) => {
   try {
-    const { message } = req.body;
+    let message = req.body.input; // Change this line
 
-    // Validate input
-    if (!Array.isArray(messages) || messages.length === 0) {
-      return res
-        .status(400)
-        .json({ error: "Invalid input. Messages array is required." });
+    if (typeof message !== "string") {
+      throw new Error("Input must be a string");
     }
 
     // Generate AI response
-    const response = await AI.generateStatblock(message);
+    const response = await AI.createStatBlock(message);
     res.json({ response });
   } catch (error) {
     console.error("Error in AI function call:", error);
