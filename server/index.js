@@ -53,7 +53,7 @@ app.delete("/:type/:id", users.delObj);
 app.post("/templates", () => {});
 
 // AI endpoints
-app.post("/api/chat", express.json(), async (req, res) => {
+app.post("/AI/genchat", express.json(), async (req, res) => {
   if (!req.body) {
     console.log("Invalid input. Message is null.");
     return res.status(400).json({ error: "Invalid input. Message is null." });
@@ -67,7 +67,7 @@ app.post("/api/chat", express.json(), async (req, res) => {
       {
         role: "system",
         content:
-          "You are a helpful assistant that can call a function caller with a given prompt ONLY if the user calls with a '/' to indicate command.",
+          "You are a helpful assistant that can call one of two function callers depending on whatever command the user uses. You MUST call either function if the user has a '/' or a '{' before their message",
       },
       ...history, // Include previous messages
       { role: "user", content: input }, // Add the latest user input
@@ -82,7 +82,7 @@ app.post("/api/chat", express.json(), async (req, res) => {
       .json({ error: "An error occurred while processing your request." });
   }
 });
-app.post("/api/statblock", express.json(), async (req, res) => {
+app.post("/AI/statblock", express.json(), async (req, res) => {
   try {
     let message = req.body.input; // Change this line
 

@@ -3,6 +3,7 @@ const fs = require("fs");
 const pdf = require("pdf-parse");
 const path = require("path");
 const { PDFDocument } = require("pdf-lib");
+const messageHistory = [];
 
 const openai = new OpenAI({
   apiKey: "",
@@ -38,7 +39,7 @@ async function getpagefromPlayerHandbook(page) {
       return `Invalid page number. The Player's Handbook has ${data.numpages} pages.`;
     }
     const outputPdfPath = path.join(basePath, "ph_single_page.pdf");
-    await extractSinglePage(filePath, outputPdfPath, page);
+    await extractSinglePage(filePath, outputPdfPath, page - 7);
 
     // Parse and log the extracted single page
     const parsedContent = await parseSinglePagePDF(outputPdfPath);
@@ -59,7 +60,7 @@ async function getpagefromDungeonMastersGuide(page) {
       return `Invalid page number. The Dungeon Master's Guide has ${data.numpages} pages.`;
     }
     const outputPdfPath = path.join(basePath, "dmg_single_page.pdf");
-    await extractSinglePage(filePath, outputPdfPath, page);
+    await extractSinglePage(filePath, outputPdfPath, page - 1);
 
     // Parse and log the extracted single page
     const parsedContent = await parseSinglePagePDF(outputPdfPath);
@@ -539,7 +540,7 @@ function RemoveToDoList(id) {
 
 async function callChatGPTWithFunctions(messages) {
   let chat = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
     messages,
     tools: [
       {
@@ -772,7 +773,7 @@ async function callChatGPTWithFunctions(messages) {
 
 async function mothercaller(messages) {
   let chat = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
     messages,
     tools: [
       {
@@ -780,7 +781,7 @@ async function mothercaller(messages) {
         function: {
           name: "callChatGPTWithFunctions",
           description:
-            "Sends a prompt to a ChatGPT-3.5 turbo function caller ONLY if the user calls with a '/' to indicate command.",
+            "Sends a prompt to a ChatGPT-4o mini function caller ONLY if the user calls with a '/' to indicate command.",
           parameters: {
             type: "object",
             properties: {
@@ -794,6 +795,24 @@ async function mothercaller(messages) {
           },
         },
       },
+      {
+        type: "function",
+        function: {
+          name: "generalConversation",
+          description:
+            "Function that handles conversation with a GPT 4o mini model, BUT ONLY if they call with a '{' to indicate general conversation command.",
+          parameters: {
+            type: "object",
+            properties: {
+              userMessageGen: {
+                type: "string",
+                description: "The user's message for general conversation.",
+              },
+            },
+            required: ["userMessageGen"],
+          },
+        },
+      },
     ],
     tool_choice: "auto",
   });
@@ -801,46 +820,88 @@ async function mothercaller(messages) {
   messages.push(chat.choices[0].message);
 
   if (chat.choices[0].message.tool_calls) {
+    console.log("Tool calls:", chat.choices[0].message.tool_calls);
     for (const toolCall of chat.choices[0].message.tool_calls) {
+      let argumentObj = JSON.parse(toolCall.function.arguments);
+      let functionMessages = [
+        {
+          role: "system",
+          content:
+            "You are a helpful assistant that can use various functions.",
+        },
+        { role: "user", content: argumentObj.userMessage },
+      ];
+
+      let messageHistoryLocal = [
+        {
+          role: "system",
+          content:
+            "You are a helpful assistant that can respond to user messages that start with {",
+        },
+      ];
+
+      for (const message of messages) {
+        if (message.role === "user") {
+          messageHistoryLocal.push({
+            role: message.role,
+            content: message.content,
+          });
+        } else if (message.role === "assistant" && message.content) {
+          messageHistoryLocal.push({
+            role: message.role,
+            content: message.content,
+          });
+        }
+      }
+
+      console.log("messageHistoryLocal", messageHistoryLocal);
+
+      let content;
       if (toolCall.function.name === "callChatGPTWithFunctions") {
-        let argumentObj = JSON.parse(toolCall.function.arguments);
-        let functionMessages = [
-          {
-            role: "system",
-            content:
-              "You are a helpful assistant that can use various functions.",
-          },
-          { role: "user", content: argumentObj.userMessage },
-        ];
         let updatedMessages = await callChatGPTWithFunctions(functionMessages);
-        //console.log(updatedMessages);
-        // Add the function response
+        content = JSON.stringify(updatedMessages.slice(2));
         messages.push({
           role: "tool",
           tool_call_id: toolCall.id,
           name: toolCall.function.name,
-          content: JSON.stringify(updatedMessages.slice(2)), // Convert the messages to a string
+          content: content,
         });
+      } else if (toolCall.function.name === "generalConversation") {
+        content = await generalConversation(messageHistoryLocal);
       } else {
         console.log("Function not found");
-        messages.push({
-          role: "tool",
-          tool_call_id: toolCall.id,
-          name: toolCall.function.name,
-          content: "Function not found",
-        });
+        content = "Function not found";
       }
+      messages.push({
+        role: "tool",
+        tool_call_id: toolCall.id,
+        name: toolCall.function.name,
+        content: content,
+      });
     }
   }
 
   let finalResponse = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
     messages,
   });
 
   return finalResponse.choices[0].message.content;
 }
 
+async function generalConversation(messages) {
+  console.log("generalConversation called");
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: messages,
+    });
+    return response.choices[0].message.content;
+  } catch (error) {
+    console.error("Error in generalConversation:", error);
+    return "I'm sorry, but I encountered an error while processing your request.";
+  }
+}
 async function createStatBlock(userMessage) {
   const systemMessage = {
     role: "system",
@@ -898,7 +959,7 @@ async function createStatBlock(userMessage) {
   const messages = [systemMessage, { role: "user", content: userMessage }];
 
   let chat = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
     messages: messages,
   });
 

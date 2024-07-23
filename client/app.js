@@ -34,7 +34,7 @@ const app = Vue.createApp({
       // Add user message to history
 
       try {
-        const response = await fetch(`${URL}/api/chat`, {
+        const response = await fetch(`${URL}/AI/genchat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -72,7 +72,7 @@ const app = Vue.createApp({
     async sendRequest_two() {
       if (this.userInput_two.trim() === "") return;
       try {
-        const response = await fetch(`${URL}/api/statblock`, {
+        const response = await fetch(`${URL}/AI/statblock`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
