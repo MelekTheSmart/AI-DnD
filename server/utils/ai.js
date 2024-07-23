@@ -5,7 +5,7 @@ const path = require("path");
 const { PDFDocument } = require("pdf-lib");
 
 const openai = new OpenAI({
-  apiKey: "sk-proj-tZB0dnDAWkao2IqviesQT3BlbkFJv4uswL5B0KdwAV5v7wyS",
+  apiKey: "",
 });
 
 const basePath =
@@ -38,7 +38,7 @@ async function getpagefromPlayerHandbook(page) {
       return `Invalid page number. The Player's Handbook has ${data.numpages} pages.`;
     }
     const outputPdfPath = path.join(basePath, "ph_single_page.pdf");
-    await extractSinglePage(filePath, outputPdfPath, page - 1);
+    await extractSinglePage(filePath, outputPdfPath, page);
 
     // Parse and log the extracted single page
     const parsedContent = await parseSinglePagePDF(outputPdfPath);
@@ -59,7 +59,7 @@ async function getpagefromDungeonMastersGuide(page) {
       return `Invalid page number. The Dungeon Master's Guide has ${data.numpages} pages.`;
     }
     const outputPdfPath = path.join(basePath, "dmg_single_page.pdf");
-    await extractSinglePage(filePath, outputPdfPath, page - 1);
+    await extractSinglePage(filePath, outputPdfPath, page);
 
     // Parse and log the extracted single page
     const parsedContent = await parseSinglePagePDF(outputPdfPath);
@@ -86,7 +86,7 @@ async function getpagefromMonsterManual(getpage) {
     }
     console.log("Extracting page");
     const outputPdfPath = path.join(basePath, "mm_single_page.pdf");
-    await extractSinglePage(filePath, outputPdfPath, getpage - 1);
+    await extractSinglePage(filePath, outputPdfPath, getpage);
     console.log("Page extracted, now parsing");
 
     // Parse and log the extracted single page
