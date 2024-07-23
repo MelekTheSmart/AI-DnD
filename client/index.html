@@ -9,11 +9,53 @@
   </head>
   <body>
     <div id="app">
-      <div id="otherstuff">
-        <h1>{{ titleh1 }}</h1>
+      <h1>Encounter</h1>
+      <div id="main">
+        <div id="game-container"></div>
+        <button
+          v-if="sidebarShow == true"
+          @click="sidebarShow = false"
+          style="height: 20px"
+        >
+          >>>
+        </button>
+        <button
+          v-if="sidebarShow == false"
+          @click="sidebarShow = true"
+          style="height: 20px"
+        >
+          <<<
+        </button>
+        <div v-if="sidebarShow" id="sidebar">
+          <div id="sidebarHeader">
+            <button @click="setTab('creatures')">Add Creatures</button>
+            <button @click="setTab('paint')">Paint Map</button>
+            <button @click="setTab('add1')">Add Here</button>
+            <button @click="setTab('add2')">Add Here</button>
+          </div>
+          <div id="sidebarBody">
+            <h3>{{sidebarTab}}</h3>
+            <div v-if="sidebarTab == 'creatures'" id="creatureTools"></div>
+            <div v-if="sidebarTab == 'paint'" id="paintTools"></div>
+            <div v-if="sidebarTab == 'add1'" id="add1Tools"></div>
+            <div v-if="sidebarTab == 'add2'" id="add2Tools"></div>
+            <div id="chatWindow">
+              <div id="inputField">
+                <input v-model="chatInputField" type="text" />
+                <button @click="addMessage()">Submit</button>
+              </div>
+              <div id="chatHistory">
+                <p
+                  v-for="message in messageHistory"
+                  style="align-self: flex-end"
+                >
+                  {{message}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div id="calculators"></div>
     </div>
     <script src="app.js"></script>
   </body>
