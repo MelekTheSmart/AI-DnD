@@ -27,31 +27,22 @@
           <<<
         </button>
         <div v-if="sidebarShow" id="sidebar">
-          <div id="sidebarHeader">
-            <button @click="setTab('creatures')">Add Creatures</button>
-            <button @click="setTab('paint')">Paint Map</button>
-            <button @click="setTab('add1')">Add Here</button>
-            <button @click="setTab('add2')">Add Here</button>
-          </div>
           <div id="sidebarBody">
-            <h3>{{sidebarTab}}</h3>
-            <div v-if="sidebarTab == 'creatures'" id="creatureTools"></div>
-            <div v-if="sidebarTab == 'paint'" id="paintTools"></div>
-            <div v-if="sidebarTab == 'add1'" id="add1Tools"></div>
-            <div v-if="sidebarTab == 'add2'" id="add2Tools"></div>
-            <div id="chatWindow">
-              <div id="inputField">
-                <input v-model="chatInputField" type="text" />
-                <button @click="addMessage()">Submit</button>
-              </div>
-              <div id="chatHistory">
-                <p
-                  v-for="message in messageHistory"
-                  style="align-self: flex-end"
-                >
-                  {{message}}
-                </p>
-              </div>
+            <button @click="setTab('creatures')">Add Creature</button>
+            <button @click="setTab('paint')">Paint Map</button>
+            <button @click="setTab('add1')">Generate Dialogue</button>
+            <button @click="setTab('add1')">Start Initiative</button>
+            <button @click="setTab('add1')">Creatures</button>
+          </div>
+          <div id="chatWindow">
+            <div id="inputField">
+              <input v-model="chatInputField" type="text" />
+              <button @click="addMessage()">Submit</button>
+            </div>
+            <div id="chatHistory">
+              <p v-for="message in messageHistory" style="align-self: flex-end">
+                {{message}}
+              </p>
             </div>
           </div>
         </div>
