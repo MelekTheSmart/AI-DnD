@@ -66,7 +66,8 @@ app.post("/api/chat", express.json(), async (req, res) => {
     let messages = [
       {
         role: "system",
-        content: "You are a helpful assistant that can use various functions.",
+        content:
+          "You are a helpful assistant that can call a function caller with a given prompt ONLY if the user calls with a '/' to indicate command.",
       },
       ...history, // Include previous messages
       { role: "user", content: input }, // Add the latest user input

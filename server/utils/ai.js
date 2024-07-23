@@ -1,13 +1,112 @@
 const OpenAI = require("openai");
+const fs = require("fs");
+const pdf = require("pdf-parse");
+const path = require("path");
+const { PDFDocument } = require("pdf-lib");
 
 const openai = new OpenAI({
-  apiKey: "API key here",
+  apiKey: "API KEY HERE",
 });
+
+const basePath =
+  "/home/doctorblaze/code/codecamp/javascript stuff/AIdndproject/AI-DnD/resource";
 
 function helloWorld(appendString) {
   let hello = "Hello World! " + appendString;
   console.log(hello);
   return hello;
+}
+
+async function parseSinglePagePDF(pdfPath) {
+  try {
+    const dataBuffer = fs.readFileSync(pdfPath);
+    const data = await pdf(dataBuffer);
+    console.log("PDF Content:", data.text);
+    return data.text;
+  } catch (error) {
+    console.error("Error parsing PDF:", error);
+    return "Error parsing the PDF.";
+  }
+}
+
+async function getpagefromPlayerHandbook(page) {
+  try {
+    const filePath = path.join(basePath, "ph.pdf");
+    const dataBuffer = fs.readFileSync(filePath);
+    const data = await pdf(dataBuffer);
+    if (page < 1 || page > data.numpages) {
+      return `Invalid page number. The Player's Handbook has ${data.numpages} pages.`;
+    }
+    const outputPdfPath = path.join(basePath, "ph_single_page.pdf");
+    await extractSinglePage(filePath, outputPdfPath, page - 1);
+
+    // Parse and log the extracted single page
+    const parsedContent = await parseSinglePagePDF(outputPdfPath);
+    console.log(parsedContent);
+    return "Page contents sent to frontend";
+  } catch (error) {
+    console.error("Error reading Player's Handbook:", error);
+    return "Error reading the Player's Handbook.";
+  }
+}
+
+async function getpagefromDungeonMastersGuide(page) {
+  try {
+    const filePath = path.join(basePath, "dmg.pdf");
+    const dataBuffer = fs.readFileSync(filePath);
+    const data = await pdf(dataBuffer);
+    if (page < 1 || page > data.numpages) {
+      return `Invalid page number. The Dungeon Master's Guide has ${data.numpages} pages.`;
+    }
+    const outputPdfPath = path.join(basePath, "dmg_single_page.pdf");
+    await extractSinglePage(filePath, outputPdfPath, page - 1);
+
+    // Parse and log the extracted single page
+    const parsedContent = await parseSinglePagePDF(outputPdfPath);
+    console.log(parsedContent);
+    return "Page contents sent to frontend";
+  } catch (error) {
+    console.error("Error reading Dungeon Master's Guide:", error);
+    return "Error reading the Dungeon Master's Guide.";
+  }
+}
+
+async function getpagefromMonsterManual(getpage) {
+  try {
+    console.log("Accessing Monster Manual");
+    const filePath = path.join(basePath, "mm.pdf");
+    const dataBuffer = fs.readFileSync(filePath);
+    const data = await pdf(dataBuffer);
+    console.log(`Requested page: ${getpage}`);
+    if (getpage < 1 || getpage > data.numpages) {
+      console.log(
+        `Invalid page number. The Monster Manual has ${data.numpages} pages.`
+      );
+      return `Invalid page number. The Monster Manual has ${data.numpages} pages.`;
+    }
+    console.log("Extracting page");
+    const outputPdfPath = path.join(basePath, "mm_single_page.pdf");
+    await extractSinglePage(filePath, outputPdfPath, getpage - 1);
+    console.log("Page extracted, now parsing");
+
+    // Parse and log the extracted single page
+    const parsedContent = await parseSinglePagePDF(outputPdfPath);
+    console.log(parsedContent);
+    return "Page contents sent to frontend";
+  } catch (error) {
+    console.error("Error reading Monster Manual:", error);
+    return "Error reading the Monster Manual.";
+  }
+}
+
+async function extractSinglePage(inputPdfPath, outputPdfPath, pageNumber) {
+  const existingPdfBytes = fs.readFileSync(inputPdfPath);
+  const pdfDoc = await PDFDocument.load(existingPdfBytes);
+  const newPdfDoc = await PDFDocument.create();
+  const [copiedPage] = await newPdfDoc.copyPages(pdfDoc, [pageNumber]);
+  newPdfDoc.addPage(copiedPage);
+  const pdfBytes = await newPdfDoc.save();
+  fs.writeFileSync(outputPdfPath, pdfBytes);
 }
 
 function getPlayerHandbookTOC() {
@@ -551,6 +650,63 @@ async function callChatGPTWithFunctions(messages) {
           },
         },
       },
+      {
+        type: "function",
+        function: {
+          name: "getpagefromPlayerHandbook",
+          description:
+            "Returns the content of a specific page from the Player's Handbook.",
+          parameters: {
+            type: "object",
+            properties: {
+              page: {
+                type: "integer",
+                description:
+                  "The page number to retrieve from the Player's Handbook",
+              },
+            },
+            required: ["page"],
+          },
+        },
+      },
+      {
+        type: "function",
+        function: {
+          name: "getpagefromDungeonMastersGuide",
+          description:
+            "Returns the content of a specific page from the Dungeon Master's Guide.",
+          parameters: {
+            type: "object",
+            properties: {
+              page: {
+                type: "integer",
+                description:
+                  "The page number to retrieve from the Dungeon Master's Guide",
+              },
+            },
+            required: ["page"],
+          },
+        },
+      },
+      {
+        type: "function",
+        function: {
+          name: "getpagefromMonsterManual",
+          description:
+            "Returns the content of a specific page from the Monster Manual.",
+          parameters: {
+            type: "object",
+            properties: {
+              page: {
+                type: "integer",
+                description:
+                  "The page number to retrieve from the Monster Manual",
+              },
+            },
+            required: ["page"],
+          },
+        },
+      },
     ],
     tool_choice: "auto",
   });
@@ -586,6 +742,15 @@ async function callChatGPTWithFunctions(messages) {
           break;
         case "getMonsterManualTOC":
           content = getMonsterManualTOC();
+          break;
+        case "getpagefromMonsterManual":
+          content = getpagefromMonsterManual(argumentObj.page);
+          break;
+        case "getpagefromPlayerHandbook":
+          content = getpagefromPlayerHandbook(argumentObj.page);
+          break;
+        case "getpagefromDungeonMastersGuide":
+          content = getpagefromDungeonMastersGuide(argumentObj.page);
           break;
         default:
           console.log("Function not found");
