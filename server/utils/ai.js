@@ -5,7 +5,7 @@ const path = require("path");
 const { PDFDocument } = require("pdf-lib");
 
 const openai = new OpenAI({
-  apiKey: "API KEY HERE",
+  apiKey: "sk-proj-tZB0dnDAWkao2IqviesQT3BlbkFJv4uswL5B0KdwAV5v7wyS",
 });
 
 const basePath =
