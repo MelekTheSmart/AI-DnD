@@ -27,23 +27,60 @@
           <<<
         </button>
         <div v-if="sidebarShow" id="sidebar">
-          <div id="sidebarBody">
-            <button @click="setTab('creatures')">Add Creature</button>
-            <button @click="setTab('paint')">Paint Map</button>
-            <button @click="setTab('add1')">Generate Dialogue</button>
-            <button @click="setTab('add1')">Start Initiative</button>
-            <button @click="setTab('add1')">Creatures</button>
+          <div v-if="sidebarTab  == 'home'" id="sidebarHome">
+            <div id="sidebarMenu">
+              <button @click="setTab('addCreature')">Add Creature</button>
+              <button @click="setTab('paint')">Paint Map</button>
+              <button @click="setTab('dialogue')">Generate Dialogue</button>
+              <button @click="setTab('initiative')">Start Initiative</button>
+              <button @click="setTab('creatures')">Show Creatures</button>
+            </div>
+            <div id="chatWindow">
+              <div id="inputField">
+                <input v-model="chatInputField" type="text" />
+                <button @click="addMessage()">Submit</button>
+              </div>
+              <div id="chatHistory">
+                <p
+                  v-for="message in messageHistory"
+                  style="align-self: flex-end"
+                >
+                  {{message}}
+                </p>
+              </div>
+            </div>
           </div>
-          <div id="chatWindow">
-            <div id="inputField">
-              <input v-model="chatInputField" type="text" />
-              <button @click="addMessage()">Submit</button>
-            </div>
-            <div id="chatHistory">
-              <p v-for="message in messageHistory" style="align-self: flex-end">
-                {{message}}
-              </p>
-            </div>
+          <div v-if="sidebarTab  == 'addCreature'" id="addCreature">
+            <button style="align-self: flex-start" @click="setTab('home')">
+              Back
+            </button>
+            <form onsubmit="return false;">
+              <h2>
+                <label for="generateCreatureInput"
+                  >Input Creature Description:
+                </label>
+              </h2>
+              <textarea
+                name="generateCreatureInput"
+                id="generateCreatureInput"
+                placeholder="Creature Description..."
+              ></textarea>
+              <button
+                id="generateCreatureInputButton"
+                @click="setTab('showGeneratedStatblock')"
+              >
+                Generate
+              </button>
+            </form>
+          </div>
+          <div
+            v-if="sidebarTab  == 'showGeneratedStatblock'"
+            id="showGeneratedStatblock"
+          >
+            <button style="align-self: flex-start" @click="setTab('home')">
+              Back
+            </button>
+            <p v-for="attribute in getCreatureList">{{attribute}}</p>
           </div>
         </div>
       </div>
