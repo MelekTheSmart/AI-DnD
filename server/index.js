@@ -25,7 +25,6 @@ app.use(function (req, res, next) {
 
 app.use(cors());
 
-// static hosting
 
 // session handling endpoints
 
@@ -100,6 +99,10 @@ app.post("/ai/statblock", express.json(), async (req, res) => {
       .json({ error: "An error occurred while processing your request." });
   }
 });
+
+// static hosting
+
+app.use(express.static('../client'));
 
 // This is where the server is listening
 app.listen(8080, function () {

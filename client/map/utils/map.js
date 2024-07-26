@@ -1,6 +1,13 @@
 const SERVER = {
+  url: "",
   saveImage: async function() {
+  },
+
+  getUser: async function(username, dest) {
+    let user = await fetch(`${this.url}/user/users/${username}`);
+    return await user.json();
   }
+   
 }
 
 function showRect(rect, color) {
@@ -173,25 +180,27 @@ async function addSprite(target, texture, textureMode = 'path') {
 
 // FACTORY FUNCTIONS ====================
 
-function App(element, encounterData) {
+function App(element, username, pathToEncounter) {
+  let app = new PIXI.Application({
+    backgroundColor: 0xccccff, 
+    resizeTo: element
+  });
   // init app
-  let text = '{"0/0":[{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"},{"color":"green"}],"1/0":[{"color":"white"},{"color":"white"},{"color":"white"},{"color":"white"},{"color":"green"},{"color":"white"},{"color":"white"},{"color":"white"},{"color":"white"},{"color":"white"},{"color":"white"},{"color":"white"},{"color":"white"},{"color":"white"},{"color":"white"},{"color":"white"}]}'
-  var mapData = {};
+  async function _init() {
+    element.appendChild(this.view);
 
-  function _init(element) {
-    let app = new PIXI.Application({
-      backgroundColor: 0xccccff, 
-      resizeTo: element
-    });
-    element.appendChild(app.view);
-
-    Object.assign(app, {...members, ...methods});
-    // add events
+    Object.assign(this, {...members, ...methods});
     
-    setInteractive(app.stage, 'static', 'arrow');
-    app.stage.on("globalpointermove", function(event) {
+    await this.loadUser(username, pathToEncounter);
+    
+    this.stage.addChild(this.map);
+    let rect = this.getRect();
+    this.map.renderArea(rect, 16);
+    setInteractive(this.stage, 'static', 'arrow');
+
+    this.stage.on("globalpointermove", function(event) {
       let mousePos = {...event.data.global};
-      app.creatures.forEach(function(creature) {
+      APP.creatures.forEach(function(creature) {
         let isIn = creature.contains(mousePos);
         if (isIn) {
           if (!creature.hovered) {
@@ -203,14 +212,14 @@ function App(element, encounterData) {
         }
       })
     })
-    app.stage.on("pointerdown", function(event) {
+    this.stage.on("pointerdown", function(event) {
       if (event.button !== 0) {
         return;
       }
       var oneSelected = false;
       let mousePos = {...event.data.global};
-      let creaturesCopy = [...app.creatures.reverse()];
-      app.creatures.reverse();
+      let creaturesCopy = [...APP.creatures.reverse()];
+      APP.creatures.reverse();
       for (let creature of creaturesCopy) {
         if (creature.contains(mousePos) && !oneSelected) {
           oneSelected = true
@@ -224,10 +233,10 @@ function App(element, encounterData) {
       }
     })
 
-    app.element.addEventListener("dragover", function(event) {
+    this.element.addEventListener("dragover", function(event) {
       event.preventDefault();
     })
-    app.element.addEventListener("drop", async function(event) {
+    this.element.addEventListener("drop", async function(event) {
       event.preventDefault();
       let file = event.dataTransfer.files[0];
 
@@ -237,22 +246,20 @@ function App(element, encounterData) {
         let texture = await PIXI.Assets.load(String(data));
         let position = APP.getLocalCoords({x: event.clientX, y: event.clientY});
         let {x, y} = position;
-        let creature = await Creature({position: [x, y], stats: {hitpoints: 10}, hp: stats.hitpoints, sprite: await SERVER.saveImage(data)}, texture);
+        let stats = {hitpoints: 10}
+        let creature = await Creature({position: [x, y], stats, hp: stats.hitpoints, sprite: await SERVER.saveImage(data)}, texture);
         APP.addCreature(creature);
       }
       await reader.readAsDataURL(file);
     })
-    app.stage.addChild(app.map);
-    let rect = app.getRect();
-    app.map.renderArea(rect, 16);
-    return app;
+    return this;
   }
 
 
   // define additional members and methods
 
   let members = {
-    map: WorldMap(mapData, 2000, 16),
+    map: WorldMap({}, 1000, 16),
     creatures: [],
     contextMenu: null,
     zoom: 1,
@@ -270,6 +277,18 @@ function App(element, encounterData) {
   }
   
   let methods = {
+    loadUser: async function(username, path) {
+      if (!username) {
+        return;
+      }
+      let user = await SERVER.getUser(username);
+      let [campaign, session, encounterId] = path;
+      let encounter = user.campaigns.find(c => c._id === campaign).sessions[session].encounters[encounterId];
+      this.map = encounter.map ? WorldMap(encounter.map) : WorldMap({}, 2000, 32);
+      for (let creature of encounter.creatures) {
+        this.creatures.push(await Creature(creature));
+      }
+    },
     getLocalCoords: function(coords) {
       let {x, y} = coords;
       x -= this.stage.x;
@@ -353,7 +372,7 @@ function App(element, encounterData) {
   }
 
 
-  let app = _init(element);
+  app._init = _init; 
 
   return app;
 }
@@ -433,13 +452,9 @@ function WorldMap(data, chunkSize, rowCount=16) {
   let methods = {
     snap: function(point, scale=1) {
       for (let index in point) {
-        console.log(point);
         point[index] = Math.floor(point[index] / (this.tileSize * scale));
-        console.log(point);
         point[index] *= this.tileSize * scale;
-        console.log(point);
         point[index] += this.tileSize * scale * 0.5;
-        console.log(point);
       }
       return point;
     },
@@ -708,7 +723,7 @@ function createRotateHandle(targetBounds, diameter) {
 
 async function Creature(creatureData, immediateSprite=null) {
 
-  async function _init(creatureData, currentSprite) {
+  async function _init(creatureData, immediateSprite) {
     let spriteContainer = new PIXI.Container()
 
     Object.assign(spriteContainer, {...members, ...methods});
@@ -780,7 +795,6 @@ async function Creature(creatureData, immediateSprite=null) {
         yDifference *= -1;
       }
       let resize = APP.map.snap({x: initialSize.width + xDifference, y: initialSize.height - yDifference}, scale=0.25)
-      console.log(resize);
       this.resize(resize.x, resize.y)
     },
     setDragging: function(bool, initialPosition) {
@@ -878,19 +892,6 @@ async function Creature(creatureData, immediateSprite=null) {
 
   return creature;
 }
-
-const APP = App(document.body);
-
-async function test() {
-  let creature = {position: [400, 400], sprite: "https://png.pngtree.com/png-vector/20191126/ourmid/pngtree-image-of-cute-radish-vector-or-color-illustration-png-image_2040180.jpg", hp: 10, stats: {hitpoints: 15}}
-  let creature2 = {position: [300, 300], sprite: "image.png", hp: 10, stats: {hitpoints: 10}}
-  let c = await Creature(creature);
-  APP.addCreature(c);
-  let d = await Creature(creature2);
-  APP.addCreature(d);
-}
-test();
-
 const KEYBINDS = {
   KeyP: 'paint',
   KeyV: 'pan',
