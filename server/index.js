@@ -25,7 +25,6 @@ app.use(function (req, res, next) {
 
 app.use(cors());
 
-// static hosting
 
 // session handling endpoints
 
@@ -33,27 +32,27 @@ app.post("/sessions", validate.mkSession);
 
 // user handling endpoints
 
-app.post("/users", users.postUser);
+app.post("/user/users", users.postUser);
 
-app.get("/users/:username", users.getUser);
+app.get("/user/users/:username", users.getUser);
 
-app.get("/public/:type", () => {});
+app.get("/user/public/:type", () => {});
 
-app.post("/:type/:parentId/:ownerId", users.postObj);
+app.post("/user/:type/:parentId/:ownerId", users.postObj);
 
-app.put("/:type/:id", users.putObj);
+app.put("/user/:type/:id", users.putObj);
 
-app.get("/:type/:id", users.putObj);
+app.get("/user/:type/:id", users.putObj);
 
-app.delete("/:type/:id", users.delObj);
+app.delete("/user/:type/:id", users.delObj);
 
 // image hosting endpoints
 
 // Monster Template creation called with function called by AI
-app.post("/templates", () => {});
+app.post("/ai/templates", () => {});
 
 // AI endpoints
-app.post("/api/chat", express.json(), async (req, res) => {
+app.post("/ai/chat", express.json(), async (req, res) => {
   if (!req.body) {
     console.log("Invalid input. Message is null.");
     return res.status(400).json({ error: "Invalid input. Message is null." });
@@ -66,7 +65,8 @@ app.post("/api/chat", express.json(), async (req, res) => {
     let messages = [
       {
         role: "system",
-        content: "You are a helpful assistant that can use various functions.",
+        content:
+          "You are a helpful assistant that can call one of two function callers depending on whatever command the user uses. You MUST call either function if the user has a '/' or a '{' before their message",
       },
       ...history, // Include previous messages
       { role: "user", content: input }, // Add the latest user input
@@ -81,7 +81,7 @@ app.post("/api/chat", express.json(), async (req, res) => {
       .json({ error: "An error occurred while processing your request." });
   }
 });
-app.post("/api/statblock", express.json(), async (req, res) => {
+app.post("/ai/statblock", express.json(), async (req, res) => {
   try {
     let message = req.body.input; // Change this line
 
@@ -99,6 +99,10 @@ app.post("/api/statblock", express.json(), async (req, res) => {
       .json({ error: "An error occurred while processing your request." });
   }
 });
+
+// static hosting
+
+app.use(express.static('../client'));
 
 // This is where the server is listening
 app.listen(8080, function () {

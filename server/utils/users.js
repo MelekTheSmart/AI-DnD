@@ -56,8 +56,6 @@ async function assembleObjectRecursive(data, model=User, owner=null) {
       }
       let child = children[j]
       if (!(child.name in data[i])) {
-        console.log(child.name);
-        console.log(data[i]);
         continue
       }
       let newdata = data[i][child.name]
@@ -70,15 +68,22 @@ async function assembleObjectRecursive(data, model=User, owner=null) {
 }
 
 async function populateRecursive(data, model) {
-  if (model.children == null) return;
-  let children = model.children
-  for (let i = 0; i < children.length; i++) {
-    let child = children[i]
-    if (!(child.name in data)) continue;
-    let childData = await child.model.findOne({_id: data[child.name]}).lean()
-    if (childData == null) continue;
-    data[child.name] = childData
-    await populateRecursive(childData, child.model)
+  console.log(model.children);
+  if (model.children == null) {
+    return;
+  };
+  let childrenGroups = model.children
+  for (let i = 0; i < childrenGroups.length; i++) {
+    let childrenGroup = childrenGroups[i]
+    for (let child of data) {
+      console.log("child:", child);
+      console.log(childrenGroup.name);
+      if (!(childrenGroup.name in child)) continue;
+      let childData = await childrenGroup.model.findOne({_id: child}).lean()
+      if (childData == null) continue;
+      data[childrenGroup.name].push(childData)
+      await populateRecursive([childData], childrenGroup.model)
+    }
   }
 }
 
@@ -106,19 +111,14 @@ async function getUser(req, res) {
     let username = req.params.username;
     try {
       var user = await User.findOne({username}).lean();
+      console.log(user);
     }
     catch (error) {
       console.log(error);
       res.status(400).send(`There is no user ${username}`);
       return;
     }
-    /*
-    if (!user) {
-      res.status(400).send(`There is no user ${username}`);
-      return;
-    }
-    */
-    await populateRecursive(user, User);
+    await populateRecursive([user], User);
     res.json(user);
   })
 }
