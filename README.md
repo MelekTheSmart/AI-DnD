@@ -5,7 +5,7 @@ To Do:
 * connect backend
 * error catching on backend (very fragile as of now)
 * image storing
-* more features for game board
 * make frontend more professional
+* more features for game board
 * image generation
 * we should probably build the rest of the pages on the site
