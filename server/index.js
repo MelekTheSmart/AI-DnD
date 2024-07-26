@@ -66,7 +66,8 @@ app.post("/ai/chat", express.json(), async (req, res) => {
     let messages = [
       {
         role: "system",
-        content: "You are a helpful assistant that can use various functions.",
+        content:
+          "You are a helpful assistant that can call one of two function callers depending on whatever command the user uses. You MUST call either function if the user has a '/' or a '{' before their message",
       },
       ...history, // Include previous messages
       { role: "user", content: input }, // Add the latest user input
@@ -81,7 +82,7 @@ app.post("/ai/chat", express.json(), async (req, res) => {
       .json({ error: "An error occurred while processing your request." });
   }
 });
-app.post("/api/statblock", express.json(), async (req, res) => {
+app.post("/ai/statblock", express.json(), async (req, res) => {
   try {
     let message = req.body.input; // Change this line
 
