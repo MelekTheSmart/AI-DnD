@@ -274,6 +274,40 @@ br
               </button>
             </form>
           </div>
+          <div v-if="sidebarTab  == 'initiative'" id="initiative">
+            <button
+              class="backButton"
+              style="align-self: flex-start"
+              @click="setTab('home')"
+            >
+              Back
+            </button>
+            <div id="initiativeTracker">
+              <div
+                v-for="(creature, index) in user['campaign']['session']['encounter']['creatures']"
+                :key="index"
+              >
+                <h3>
+                  <p>{{creature['name']}} AC:{{creature['armorClass']}}</p>
+                </h3>
+                <h4>
+                  HP:
+                  <input type="text" v-model="creature['currentHitPoints']" />
+                  / {{creature['hitPoints']}}
+                </h4>
+                <input
+                  type="number"
+                  placeholder="Initiative"
+                  min="-5"
+                  v-model="creature['initiative']"
+                />
+              </div>
+              <button @click="sortCreatures">Sort By Initiative</button>
+              <button v-if="!initiativeStarted" @click="startInitiative">
+                Start Initiative
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

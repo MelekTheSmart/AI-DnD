@@ -4,12 +4,236 @@ const URL = "http://localhost:8080";
 Vue.createApp({
   data() {
     return {
-      user: {},
-      titleh1: "Template",
-      users: {},
-      sidebarTab: "showGeneratedStatblock",
+      user: {
+        campaign: {
+          session: {
+            encounter: {
+              creatures: [
+                {
+                  name: "Goblin",
+                  size: "Small",
+                  type: "Humanoid",
+                  alignment: "Neutral Evil",
+                  armorClass: 15,
+                  hitPoints: 7,
+                  speed: {
+                    walk: 30,
+                  },
+                  abilityScores: {
+                    strength: 8,
+                    dexterity: 14,
+                    constitution: 10,
+                    intelligence: 10,
+                    wisdom: 8,
+                    charisma: 8,
+                  },
+                  savingThrows: {
+                    strength: -1,
+                    dexterity: +2,
+                    constitution: +0,
+                    intelligence: +0,
+                    wisdom: -1,
+                    charisma: -1,
+                  },
+                  skills: [
+                    { name: "Stealth", modifier: +6 },
+                    { name: "Deception", modifier: +1 },
+                  ],
+                  senses: ["Darkvision 60 ft.", "blindsight 10 ft."],
+                  languages: ["Common", "Goblin"],
+                  challengeRating: 1 / 4,
+                  specialAbilities: [
+                    {
+                      name: "Nimble Escape",
+                      description:
+                        "The goblin can take the Disengage or Hide action as a bonus action on each of its turns.",
+                    },
+                  ],
+                  actions: [
+                    {
+                      name: "Scimitar",
+                      description:
+                        "Melee Weapon Attack: +4 to hit, reach 5 ft., one target.",
+                      attackBonus: 4,
+                      damage: "1d6 + 2 slashing damage",
+                    },
+                    {
+                      name: "Shortbow",
+                      description:
+                        "Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target.",
+                      attackBonus: 4,
+                      damage: "1d6 + 2 piercing damage",
+                    },
+                  ],
+                  legendaryActions: [],
+                },
+                {
+                  name: "Emerald Dragon",
+                  size: "Huge",
+                  type: "Dragon",
+                  alignment: "Chaotic Good",
+                  armorClass: 20,
+                  hitPoints: 300,
+                  speed: {
+                    walk: 40,
+                    fly: 80,
+                    swim: 60,
+                    climb: 40,
+                    burrow: 20,
+                  },
+                  abilityScores: {
+                    strength: 26,
+                    dexterity: 14,
+                    constitution: 25,
+                    intelligence: 18,
+                    wisdom: 20,
+                    charisma: 22,
+                  },
+                  savingThrows: {
+                    strength: 14,
+                    dexterity: 8,
+                    constitution: 13,
+                    intelligence: 10,
+                    wisdom: 12,
+                    charisma: 14,
+                  },
+                  skills: [
+                    { name: "Perception", modifier: 12 },
+                    { name: "Persuasion", modifier: 14 },
+                    { name: "Stealth", modifier: 8 },
+                  ],
+                  senses: [
+                    "Blindsight 60 ft.",
+                    "Darkvision 120 ft.",
+                    "Truesight 60 ft.",
+                    "Passive Perception 22",
+                  ],
+                  languages: ["Common", "Draconic", "Sylvan"],
+                  challengeRating: 24,
+                  specialAbilities: [
+                    {
+                      name: "Legendary Resistance",
+                      description:
+                        "If the dragon fails a saving throw, it can choose to succeed instead.",
+                    },
+                    {
+                      name: "Aerial Legend",
+                      description:
+                        "The dragon can cast spells as if it were a level 20 spellcaster. It can cast spells such as 'Fly', 'Invisibility', and 'Charm Person' at will.",
+                    },
+                  ],
+                  actions: [
+                    {
+                      name: "Multiattack",
+                      description:
+                        "The dragon makes three attacks: one with its bite and two with its claws.",
+                      attackBonus: 13,
+                      damage: "1d10 + 8 piercing damage",
+                    },
+                    {
+                      name: "Breath Weapon (Recharge 5-6)",
+                      description:
+                        "The dragon exhales a green, toxic cloud in a 90-foot cone. Each creature in that area must make a DC 21 Constitution saving throw, taking 18d6 poison damage on a failed save, or half as much damage on a successful one.",
+                      attackBonus: null,
+                      damage: "18d6 poison damage",
+                    },
+                    {
+                      name: "Tail Attack",
+                      description:
+                        "The dragon makes a tail attack against one target within 15 feet.",
+                      attackBonus: 13,
+                      damage: "2d8 + 8 bludgeoning damage",
+                    },
+                  ],
+                  legendaryActions: [
+                    {
+                      name: "Detect",
+                      description:
+                        "The dragon makes a Wisdom (Perception) check.",
+                    },
+                    {
+                      name: "Wing Attack (Costs 2 Actions)",
+                      description:
+                        "The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a DC 21 Dexterity saving throw or take 2d6 + 8 bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.",
+                    },
+                    {
+                      name: "Tail Attack (Costs 2 Actions)",
+                      description: "The dragon can use its tail attack action.",
+                    },
+                  ],
+                },
+                {
+                  name: "Hobgoblin",
+                  size: "Medium",
+                  type: "Humanoid",
+                  alignment: "Lawful Evil",
+                  armorClass: 18,
+                  hitPoints: 24,
+                  speed: {
+                    walk: 30,
+                    fly: 0,
+                    swim: 0,
+                    climb: 0,
+                    burrow: 0,
+                  },
+                  abilityScores: {
+                    strength: 14,
+                    dexterity: 15,
+                    constitution: 12,
+                    intelligence: 10,
+                    wisdom: 11,
+                    charisma: 10,
+                  },
+                  savingThrows: {
+                    strength: 2,
+                    dexterity: 3,
+                    constitution: 1,
+                    intelligence: 0,
+                    wisdom: 0,
+                    charisma: 0,
+                  },
+                  skills: [
+                    { name: "Perception", modifier: 2 },
+                    { name: "Stealth", modifier: 4 },
+                  ],
+                  senses: ["Darkvision 60 ft.", "Passive Perception 12"],
+                  languages: ["Common", "Goblin"],
+                  challengeRating: 1,
+                  specialAbilities: [
+                    {
+                      name: "Martial Advantage",
+                      description:
+                        "Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated.",
+                    },
+                  ],
+                  actions: [
+                    {
+                      name: "Longsword",
+                      description:
+                        "Melee Weapon Attack: +4 to hit, reach 5 ft., one target.",
+                      attackBonus: 4,
+                      damage: "1d8 + 2 slashing",
+                    },
+                    {
+                      name: "Shortbow",
+                      description:
+                        "Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target.",
+                      attackBonus: 4,
+                      damage: "1d6 + 2 piercing",
+                    },
+                  ],
+                  legendaryActions: [],
+                },
+              ],
+            },
+          },
+        },
+      },
+      sidebarTab: "initiative",
+      initiativeStarted: false,
       sidebarShow: true,
       chatInputField: "",
+      sortedCreatures: [],
       messageHistory: ["Hello"],
       colors: [
         "FCE205",
@@ -46,66 +270,98 @@ Vue.createApp({
       ],
 
       currentCreature: {
-        name: "Goblin",
-        size: "Small",
-        type: "Humanoid",
-        alignment: "Neutral Evil",
-        armorClass: 15,
-        hitPoints: 7,
+        name: "Emerald Dragon",
+        size: "Huge",
+        type: "Dragon",
+        alignment: "Chaotic Good",
+        armorClass: 20,
+        hitPoints: 300,
         speed: {
-          walk: 30,
-          fly: 0,
-          swim: 0,
-          climb: 0,
-          burrow: 0,
+          walk: 40,
+          fly: 80,
+          swim: 60,
+          climb: 40,
+          burrow: 20,
         },
         abilityScores: {
-          strength: 8,
+          strength: 26,
           dexterity: 14,
-          constitution: 10,
-          intelligence: 10,
-          wisdom: 8,
-          charisma: 8,
+          constitution: 25,
+          intelligence: 18,
+          wisdom: 20,
+          charisma: 22,
         },
         savingThrows: {
-          strength: -1,
-          dexterity: +2,
-          constitution: +0,
-          intelligence: +0,
-          wisdom: -1,
-          charisma: -1,
+          strength: 14,
+          dexterity: 8,
+          constitution: 13,
+          intelligence: 10,
+          wisdom: 12,
+          charisma: 14,
         },
         skills: [
-          { name: "Stealth", modifier: +6 },
-          { name: "Deception", modifier: +1 },
+          { name: "Perception", modifier: 12 },
+          { name: "Persuasion", modifier: 14 },
+          { name: "Stealth", modifier: 8 },
         ],
-        senses: ["Darkvision 60 ft.", "blindsight 10 ft."],
-        languages: ["Common", "Goblin"],
-        challengeRating: 1 / 4,
+        senses: [
+          "Blindsight 60 ft.",
+          "Darkvision 120 ft.",
+          "Truesight 60 ft.",
+          "Passive Perception 22",
+        ],
+        languages: ["Common", "Draconic", "Sylvan"],
+        challengeRating: 24,
         specialAbilities: [
           {
-            name: "Nimble Escape",
+            name: "Legendary Resistance",
             description:
-              "The goblin can take the Disengage or Hide action as a bonus action on each of its turns.",
+              "If the dragon fails a saving throw, it can choose to succeed instead.",
+          },
+          {
+            name: "Aerial Legend",
+            description:
+              "The dragon can cast spells as if it were a level 20 spellcaster. It can cast spells such as 'Fly', 'Invisibility', and 'Charm Person' at will.",
           },
         ],
         actions: [
           {
-            name: "Scimitar",
+            name: "Multiattack",
             description:
-              "Melee Weapon Attack: +4 to hit, reach 5 ft., one target.",
-            attackBonus: 4,
-            damage: "1d6 + 2 slashing damage",
+              "The dragon makes three attacks: one with its bite and two with its claws.",
+            attackBonus: 13,
+            damage: "1d10 + 8 piercing damage",
           },
           {
-            name: "Shortbow",
+            name: "Breath Weapon (Recharge 5-6)",
             description:
-              "Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target.",
-            attackBonus: 4,
-            damage: "1d6 + 2 piercing damage",
+              "The dragon exhales a green, toxic cloud in a 90-foot cone. Each creature in that area must make a DC 21 Constitution saving throw, taking 18d6 poison damage on a failed save, or half as much damage on a successful one.",
+            attackBonus: null,
+            damage: "18d6 poison damage",
+          },
+          {
+            name: "Tail Attack",
+            description:
+              "The dragon makes a tail attack against one target within 15 feet.",
+            attackBonus: 13,
+            damage: "2d8 + 8 bludgeoning damage",
           },
         ],
-        legendaryActions: [],
+        legendaryActions: [
+          {
+            name: "Detect",
+            description: "The dragon makes a Wisdom (Perception) check.",
+          },
+          {
+            name: "Wing Attack (Costs 2 Actions)",
+            description:
+              "The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a DC 21 Dexterity saving throw or take 2d6 + 8 bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.",
+          },
+          {
+            name: "Tail Attack (Costs 2 Actions)",
+            description: "The dragon can use its tail attack action.",
+          },
+        ],
       },
     };
   },
@@ -117,90 +373,27 @@ Vue.createApp({
       this.messageHistory.unshift(this.chatInputField);
       this.chatInputField = "";
     },
-    checkObjeck: function (object) {
-      if (!(typeof object == "object")) {
-        return object;
-      }
-      for (let item in object) {
-        if (typeof object[item] == "object") {
-          for (let key in object[item]) {
-            console.log(key, object[item][key]);
-          }
-        }
-        return item;
-      }
+    sortCreatures: function () {
+      // Sort creatures and update sortedCreatures data property
+      this.user.campaign.session.encounter.creatures = [
+        ...this.user.campaign.session.encounter.creatures,
+      ].sort((a, b) => b.initiative - a.initiative);
     },
-    getKeysAndValues: function (obj) {
-      let keysAndValues = [];
-
-      for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          if (typeof obj[key] === "object" && obj[key] !== null) {
-            let nested = this.getKeysAndValues(obj[key]);
-            if (!(key == 0)) {
-              keysAndValues.push(key + ":");
-            }
-            // Push each key-value pair from nested object\
-            nested.forEach((entry) => {
-              keysAndValues.push(`${entry}`);
-            });
-          } else {
-            // Push key-value pair for primitive values
-            if (isNaN(parseInt(key))) {
-              keysAndValues.push(`${key}: ${obj[key]}`);
-            } else {
-              keysAndValues.push(`${obj[key]}`);
-            }
-          }
-        }
-      }
-
-      return keysAndValues;
-    },
-    async sendRequest() {
-      // Add user message to history
-
-      try {
-        const response = await fetch(`${URL}/AI/genchat`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            input: this.chatInputField,
-            history: this.messageHistory,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        this.response = data.response;
-        //add user input to message history after going through index.js, pushing to messagehistory
-        //before sending messagehistory to api duplicates messages
-        this.messageHistory.push({ role: "user", content: this.userInput_one });
-
-        // Add AI response to history
-        this.messageHistory.push({
-          role: "assistant",
-          content: this.response_one,
-        });
-
-        console.log("Updated message history:", this.messageHistory);
-      } catch (error) {
-        console.error("Error:", error);
-        this.response_one = "An error occurred while processing your request.";
-      }
-
-      this.userInput_one = "";
+    startInitiative: function () {
+      this.initiativeStarted = true;
+      this.sortCreatures();
     },
   },
   created: function () {
     console.log("vue app loaded!");
   },
   computed: {
+    // sortedCreatures() {
+    //   // Return a new array to ensure reactivity
+    //   return [...this.user.campaign.session.encounter.creatures].sort(
+    //     (a, b) => b.initiative - a.initiative
+    //   );
+    // },
     getCreatureList: function () {
       description = [];
       let list = this.getKeysAndValues(this.currentCreature);
