@@ -190,6 +190,7 @@
 #colorMenu {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 #colorMenu button {
   border-radius: 10px;
