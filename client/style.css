@@ -1,16 +1,161 @@
-body {
-  font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+* {
+  font-family: "Consolas";
 }
-input,
-button {
-  margin: 10px 0;
-  padding: 5px;
+.backButton {
+  border-radius: 20px;
+  height: 25px;
+  text-align: center;
 }
-pre {
-  background-color: #f4f4f4;
-  padding: 10px;
-  border-radius: 5px;
+#main {
+  display: flex;
+  justify-content: space-evenly;
+  width: 99vw;
+  height: 90vh;
+}
+
+#game-container {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+}
+
+#sidebar {
+  width: 35em;
+  height: 100%;
+  border: solid 3px black;
+  display: flex;
+  flex-direction: column;
+}
+#sidebarHome {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#sidebarMenu button {
+  height: 100px;
+  width: 100%;
+  border-radius: 200px;
+  font-size: 2rem;
+}
+#sidebarMenu {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+#chatWindow {
+  border: solid 3px black;
+  height: 40%;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column-reverse;
+}
+#chatHistory {
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  text-align: justify;
+  width: 100%;
+  /* height: 100%; */
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+#inputField input {
+  width: 100%;
+}
+#inputField button {
+  height: 25px;
+}
+#inputField {
+  display: flex;
+  width: 100%;
+}
+#addCreature button {
+  border-radius: 20px;
+  align-self: center;
+}
+#addCreature {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#addCreature form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#generateCreatureInput {
+  margin: 5px;
+  height: 100%;
+  width: 99%;
+  resize: none;
+  font-size: 2rem;
+}
+#generateCreatureInputButton {
+  margin: 5px;
+  height: 10em;
+  width: 100%;
+  font-size: 2rem;
+  align-self: flex-end;
+}
+#showGeneratedStatblock {
+  height: 87vh;
+}
+#generatedStatblock {
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  font-size: 1.2em;
+  justify-content: space-around;
+  /* align-items: center; */
+}
+#generatedStatblock div {
+  margin: 10px;
+  height: 100%;
+  width: 100%;
+  /* display: flex;
+  flex-wrap: wrap; */
+}
+#generatedStatblock textarea {
+  background-color: rgb(205, 205, 205);
+  resize: none;
+  height: auto;
+  font-size: 1.2rem;
+  margin: 10px;
+  scroll-behavior: smooth;
+}
+#generatedStatblock p {
+  text-transform: capitalize;
+}
+#mapEditMenu {
+  display: flex;
+}
+#mapEditMenu button {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 10px;
+  height: 40px;
+  font-size: 1.2rem;
+}
+#colorMenu {
+  display: flex;
+  flex-wrap: wrap;
+}
+#colorMenu button {
+  border-radius: 10px;
+  height: 60px;
+  width: 60px;
+  margin: 10px;
 }
