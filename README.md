@@ -8,3 +8,4 @@ To Do:
 * more features for game board
 * make frontend more professional
 * image generation
+* we should probably build the rest of the pages on the site
