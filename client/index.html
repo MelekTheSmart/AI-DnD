@@ -12,7 +12,7 @@
   <body>
     <div id="pixicanvas"></div>
     <div id="app">
-      <h1>Encounter</h1>
+      <h1>D&D Copilot</h1>
       <div id="main">
         <div id="game-container" ref="game">{{app.view}}</div>
         <button
@@ -35,8 +35,6 @@
               <button @click="setTab('addCreature')">Add Creature</button>
               <button @click="setTab('editMap')">Edit Map</button>
               <button @click="setTab('dialogue')">Generate Dialogue</button>
-              <button @click="setTab('initiative')">Start Initiative</button>
-              <button @click="setTab('creatures')">Show Creatures</button>
             </div>
             <div id="chatWindow">
               <div id="inputField">
@@ -288,18 +286,22 @@ br
             <div id="initiativeTracker">
               <div v-for="(creature, index) in creatures" :key="index">
                 <h3>
-                  <p>{{creature['name']}} AC:{{creature['armorClass']}}</p>
+                  {{creature.creatureRef.stats['name']}}
+                  <p>AC:{{creature.creatureRef.stats['armorClass']}}</p>
                 </h3>
                 <h4>
                   HP:
-                  <input type="text" v-model="creature['currentHitPoints']" />
-                  / {{creature['hitPoints']}}
+                  <input
+                    type="text"
+                    v-model="creature.creatureRef.stats['hitPoints']"
+                  />
+                  / {{creature.creatureRef.stats['hitPoints']}}
                 </h4>
                 <input
                   type="number"
                   placeholder="Initiative"
                   min="-5"
-                  v-model="creature['initiative']"
+                  v-model="creature.creatureRef.stats['initiative']"
                 />
               </div>
               <button @click="sortCreatures">Sort By Initiative</button>

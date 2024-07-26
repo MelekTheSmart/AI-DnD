@@ -45,13 +45,13 @@ const url = "74.211.78.89";
     position: [300, 300],
     sprite: "/images/image.png",
     hp: 10,
-    stats: { hitpoints: 10, armorClass: 15 },
+    stats: { hitpoints: 10, armorClass: 15, name: "Goblin" },
   };
   let creature = {
     position: [400, 400],
     sprite: "/images/knight.png",
     hp: 10,
-    stats: { hitpoints: 15, armorClass: 18 },
+    stats: { hitPoints: 15, armorClass: 18, name: "Player" },
   };
   let c = await Creature(creature);
   console.log(c);
@@ -63,7 +63,7 @@ const url = "74.211.78.89";
       return {
         app: APP,
         creatures: APP.creatures,
-        sidebarTab: "initiative",
+        sidebarTab: "home",
         initiativeStarted: false,
         sidebarShow: true,
         chatInputField: "",
@@ -217,7 +217,8 @@ const url = "74.211.78.89";
       sortCreatures: function () {
         // Sort creatures and update sortedCreatures data property
         this.creatures = [...this.creatures].sort(
-          (a, b) => b.initiative - a.initiative
+          (a, b) =>
+            b.creatureRef.stats.initiative - a.creatureRef.stats.initiative
         );
       },
       startInitiative: function () {
