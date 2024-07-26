@@ -71,53 +71,10 @@ let encounterSchema = new Schema({
   ],
 });
 
-let mapSchema = new Schema({});
-
-let colors = [
-  "FCE205",
-  "FCB201",
-  "ED6A09",
-  "F9965B",
-  "A51002",
-  "DB1102",
-  "CD5D51",
-  "FA187D",
-  "F34C74",
-  "FB99A6",
-  "FC4648",
-  "A7034C",
-  "81539C",
-  "BD93D3",
-  "92BAE5",
-  "B8E4FD",
-  "0479CB",
-  "050573",
-  "028C7D",
-  "41E2A3",
-  "495A10",
-  "6CA138",
-  "01A210",
-  "84E248",
-  "F1D18B",
-  "9F7A46",
-  "773E0B",
-  "33200C",
-  "FFFEFC",
-  "ACACAC",
-  "121212",
-];
-
-colors.forEach((color) => {
-  mapSchema.add({
-    color: {
-      type: [Number],
-      validate: {
-        validator: function (p) {
-          return p.length === 2;
-        },
-      },
-    },
-  });
+let mapSchema = new Schema({
+  data: Object,
+  chunkSize: Number,
+  rowCount: Number,
 });
 
 let creatureSchema = new Schema({
@@ -133,6 +90,7 @@ let creatureSchema = new Schema({
     },
   },
   stats: [{ type: Schema.Types.ObjectId, ref: "Statblock" }],
+  hp: Number,
   sprite: { type: String, required: false },
 });
 

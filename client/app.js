@@ -1,5 +1,5 @@
 // 8080 URL for the express server
-const URL = "http://localhost:8080";
+const URL = "74.211.78.89";
 const app = Vue.createApp({
   data() {
     return {
