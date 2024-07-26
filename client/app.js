@@ -31,11 +31,20 @@ let pixiCanvas = document.getElementById("pixicanvas");
 let screen = document.getElementById('game-container');
 bindElements(screen, pixiCanvas);
 
-var APP = App(screen);
+var APP = App(pixiCanvas);
 
 // 8080 url for the express server
 const url = "74.211.78.89";
 (async () => {
+await APP._init();
+let creature2 = {position: [300, 300], sprite: "/images/image.png", hp: 10, stats: {hitpoints: 10}}
+let creature = {position: [400, 400], sprite: "/images/knight.png", hp: 10, stats: {hitpoints: 15}}
+let c = await Creature(creature);
+console.log(c);
+APP.addCreature(c);
+let d = await Creature(creature2);
+APP.addCreature(d);
+
 const vueApp = Vue.createApp({
   data() {
     return {
@@ -223,15 +232,4 @@ const vueApp = Vue.createApp({
     },
   },
 }).mount("#app");
-setTimeout(() => {
-  await APP._init();
-  let creature2 = {position: [300, 300], sprite: "/images/image.png", hp: 10, stats: {hitpoints: 10}}
-  let creature = {position: [400, 400], sprite: "/images/knight.png", hp: 10, stats: {hitpoints: 15}}
-  let c = await Creature(creature);
-    console.log(c);
-  APP.addCreature(c);
-  let d = await Creature(creature2);
-  APP.addCreature(d);
-}, 1000)
-
 })()
