@@ -6,7 +6,22 @@ const SERVER = {
   getUser: async function(username, dest) {
     let user = await fetch(`${this.url}/user/users/${username}`);
     return await user.json();
-  }
+  },
+  getStatblock: async function(prompt) {
+    let body = {
+      input: prompt,
+    };
+    let headers = {
+      "Content-Type": "application/json",
+    }
+    let response = await fetch(`${this.url}/ai/statblock`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
+    let statblock = await response.json();
+    return statblock;
+  },
    
 }
 

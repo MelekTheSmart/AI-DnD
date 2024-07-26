@@ -4,9 +4,10 @@ const pdf = require("pdf-parse");
 const path = require("path");
 const { PDFDocument } = require("pdf-lib");
 const messageHistory = [];
+require('dotenv').config();
 
 const openai = new OpenAI({
-  apiKey: "",
+  apiKey: ''
 });
 
 const basePath =
@@ -966,4 +967,4 @@ async function createStatBlock(userMessage) {
   return chat.choices[0].message.content;
 }
 
-module.exports = { mothercaller, createStatBlock };
+module.exports = { mothercaller, createStatBlock, generalConversation };
