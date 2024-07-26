@@ -30,7 +30,7 @@
           <div v-if="sidebarTab  == 'home'" id="sidebarHome">
             <div id="sidebarMenu">
               <button @click="setTab('addCreature')">Add Creature</button>
-              <button @click="setTab('paint')">Paint Map</button>
+              <button @click="setTab('editMap')">Edit Map</button>
               <button @click="setTab('dialogue')">Generate Dialogue</button>
               <button @click="setTab('initiative')">Start Initiative</button>
               <button @click="setTab('creatures')">Show Creatures</button>
@@ -51,7 +51,11 @@
             </div>
           </div>
           <div v-if="sidebarTab  == 'addCreature'" id="addCreature">
-            <button style="align-self: flex-start" @click="setTab('home')">
+            <button
+              class="backButton"
+              style="align-self: flex-start"
+              @click="setTab('home')"
+            >
               Back
             </button>
             <form onsubmit="return false;">
@@ -77,10 +81,198 @@
             v-if="sidebarTab  == 'showGeneratedStatblock'"
             id="showGeneratedStatblock"
           >
-            <button style="align-self: flex-start" @click="setTab('home')">
+            <button
+              class="backButton"
+              style="align-self: flex-start"
+              @click="setTab('home')"
+            >
               Back
             </button>
-            <p v-for="attribute in getCreatureList">{{attribute}}</p>
+
+            <div id="generatedStatblock">
+              <p>Name: <textarea v-model="currentCreature.name"></textarea></p>
+              <p>Size: <textarea v-model="currentCreature.size"></textarea></p>
+              <p>Type: <textarea v-model="currentCreature.type"></textarea></p>
+              <p>
+                Alignment:
+                <textarea v-model="currentCreature.alignment"></textarea>
+              </p>
+              <p>
+                Armor Class:
+                <textarea v-model="currentCreature.armorClass"></textarea>
+              </p>
+              <p>
+                Hit Points:
+                <textarea v-model="currentCreature.hitPoints"></textarea>
+              </p>
+              <p>Speed:</p>
+              <div v-for="(element, index) in currentCreature.speed">
+                <p>{{index}}:</p>
+                <textarea v-model="currentCreature['speed'][index]">
+                {{index}}
+              </textarea
+                >
+              </div>
+              <p>
+                Challenge Rating:
+                <textarea v-model="currentCreature.challengeRating"></textarea>
+              </p>
+              <p>Ability Scores:</p>
+              <div v-for="(element, index) in currentCreature.abilityScores">
+                <p>{{index}}:</p>
+                <textarea v-model="currentCreature['abilityScores'][index]">
+                {{index}}
+              </textarea
+                >
+              </div>
+              <p>Saving Throws:</p>
+              <div v-for="(element, index) in currentCreature.savingThrows">
+                <p>{{index}}:</p>
+                <textarea v-model="currentCreature['savingThrows'][index]">
+                {{index}}
+              </textarea
+                >
+              </div>
+              <p>Skills:</p>
+              <div v-for="(e,i) in currentCreature.skills">
+                <p>{{e['name']}}:</p>
+                <textarea v-model="currentCreature['skills'][i]['modifier']">
+                </textarea>
+              </div>
+              <p>Senses:</p>
+              <div v-for="(item,index) in currentCreature.senses">
+                <textarea v-model="currentCreature['senses'][index]">
+                </textarea>
+              </div>
+              <p>Languages:</p>
+              <div v-for="(item,index) in currentCreature.languages">
+                <textarea v-model="currentCreature['languages'][index]">
+                </textarea>
+              </div>
+              <p>Special Abilities:</p>
+              <div v-for="(element,index) in currentCreature.specialAbilities">
+                <p>{{element['name']}}:</p>
+                <textarea
+                  v-model="currentCreature['specialAbilities'][index]['description']"
+                  style="height: 120px"
+                >
+                </textarea>
+              </div>
+              <p>Actions</p>
+              <div v-for="(e,i) in currentCreature.actions">
+                <p>{{e['name']}}:</p>
+                <textarea
+                  v-model="currentCreature['actions'][i]['description']"
+                  style="height: 120px"
+                >
+br
+                </textarea>
+                <p>To-Hit Bonus:</p>
+                <textarea
+                  v-model="currentCreature['actions'][i]['attackBonus']"
+                >
+>
+              </textarea
+                >
+                <p>Damage:</p>
+                <textarea
+                  v-model="currentCreature['actions'][i]['damage']"
+                  style="height: 120px"
+                >
+>
+              </textarea
+                >
+              </div>
+            </div>
+          </div>
+          <div v-if="sidebarTab  == 'editMap'" id="editMap">
+            <button
+              class="backButton"
+              style="align-self: flex-start"
+              @click="setTab('home') "
+            >
+              Back
+            </button>
+            <div id="mapEditMenu">
+              <button>
+                <svg
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 3V21M12 3L9 6M12 3L15 6M12 21L15 18M12 21L9 18M3 12H21M3 12L6 15M3 12L6 9M21 12L18 9M21 12L18 15"
+                    stroke="#000000"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <button>
+                <svg
+                  fill="#000000"
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 1920 1920"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M392.26 1042.5c137.747-57.67 292.85-15.269 425.873 116.217l4.394 4.833c116.656 146.425 149.5 279.119 97.873 394.237-128.85 287.138-740.692 328.77-810.005 332.504L0 1896.442l61.953-91.83c.989-1.539 105.013-158.728 105.013-427.192 0-141.811 92.6-279.558 225.294-334.92ZM1728.701 23.052c54.923-1.099 99.96 15.268 135.111 49.43 40.643 40.644 58.109 87.877 56.021 140.603C1908.85 474.52 1423.33 953.447 1053.15 1280.79c-24.276-64.81-63.711-136.21-125.335-213.102l-8.787-9.886c-80.078-80.187-169.163-135.11-262.423-161.473C955.276 558.002 1460.677 33.927 1728.701 23.052Z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
+              <button>
+                <svg
+                  fill="#000000"
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 256 256"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M56.402 54l157.203 70-37.957 37 29.604 29.188c1.58 1.558 1.649 4.135.165 5.767l-6.73 7.405a3.756 3.756 0 0 1-5.5.122L163 173.092l-39 39.812L56.402 54zm32.593 30.615c-2.503-1.157-3.628-.05-2.514 2.471l41.64 94.202c.893 2.021 2.859 2.38 4.397.793l48.982-50.53c1.535-1.584 1.15-3.62-.847-4.545l-91.658-42.39z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div id="colorMenu">
+              <button
+                v-for="buttonColor in colors"
+                v-bind:style="{ backgroundColor:'#'+ buttonColor }"
+              ></button>
+            </div>
+          </div>
+          <div v-if="sidebarTab  == 'dialogue'" id="generateDialogue">
+            <button
+              class="backButton"
+              style="align-self: flex-start"
+              @click="setTab('home')"
+            >
+              Back
+            </button>
+            <form onsubmit="return false;">
+              <h2>
+                <label for="generateCreatureInput"
+                  >Input Dialogue Prompt:
+                </label>
+              </h2>
+              <textarea
+                name="generateCreatureInput"
+                id="generateCreatureInput"
+                placeholder="Dialogue Prompt"
+              ></textarea>
+              <button
+                id="generateCreatureInputButton"
+                @click="setTab('showGeneratedStatblock')"
+              >
+                Generate
+              </button>
+            </form>
           </div>
         </div>
       </div>
