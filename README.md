@@ -9,3 +9,12 @@ To Do:
 * more features for game board
 * image generation
 * we should probably build the rest of the pages on the site
+
+===
+Sprite actions:
+* Attack
+* Heal
+* Modify Stat
+* Delete
+* Generate dialogue
+* Reset scale/rotation
